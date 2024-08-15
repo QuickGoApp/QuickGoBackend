@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/v1/power-gym/auth")
+@RequestMapping("auth")
 @RequiredArgsConstructor
 public class AuthController {
     final AuthenticationManager authenticationManager;
@@ -53,7 +53,7 @@ public class AuthController {
     @Autowired
     final PrivilegeDetailRepository privilegeDetailRepository;
 
-    @PostMapping("/signin")
+    @PostMapping("v1/signIn")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequestDTO loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -80,7 +80,7 @@ public class AuthController {
         return ResponseEntity.ok(new JwtResponseDTO(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles, privileges));
     }
 
-    @PostMapping("/signup")
+    @PostMapping("v1/signUp")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequestDTO signUpRequest) {
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity.badRequest().body(new ResponseMessage("Error: Username is already taken!"));
