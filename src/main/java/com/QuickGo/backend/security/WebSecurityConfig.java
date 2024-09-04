@@ -58,8 +58,8 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/v1/power-gym/auth/signup",
-                                "/api/v1/power-gym/auth/signin"
+                                "/api/v1/quickGo/auth/signup",
+                                "/api/v1/quickGo/auth/signin"
                         )
                         .permitAll()
                         .anyRequest().authenticated());

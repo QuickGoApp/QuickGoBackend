@@ -36,12 +36,6 @@ public class User {
 
     private String address;
 
-    private String gender;
-
-    @Column(columnDefinition = "integer default 0")
-    private Integer height;
-
-
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createDateTime;
 

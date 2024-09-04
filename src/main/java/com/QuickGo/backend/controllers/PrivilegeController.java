@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("*")
 @Controller
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/power-gym/privilege")
+@RequestMapping(value = "/api/v1/quickGo/privilege")
 public class PrivilegeController {
     @Autowired
     private PrivilegeService privilegeService;
@@ -33,6 +33,17 @@ public class PrivilegeController {
     ResponseEntity<?> getAllPrivileges() throws Exception{
         try {
             return privilegeService.getAllPrivileges();
+        } catch (CustomException e) {
+            throw new CustomException(e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @PostMapping(value = "assignPrivileges")
+    ResponseEntity<?> assignPrivileges(@RequestBody PrivilegeDTO privilegeDTO) throws Exception{
+        try {
+            return privilegeService.assignPrivileges(privilegeDTO);
         } catch (CustomException e) {
             throw new CustomException(e.getMessage());
         } catch (Exception e) {

@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/v1/power-gym/auth")
+@RequestMapping("/api/v1/quickGo/auth")
 @RequiredArgsConstructor
 public class AuthController {
     final AuthenticationManager authenticationManager;
@@ -121,8 +121,6 @@ public class AuthController {
         user.setMobileNum(signUpRequest.getMobileNum());
         user.setName(signUpRequest.getName());
         user.setAddress(signUpRequest.getAddress());
-        user.setGender(signUpRequest.getGender());
-        user.setHeight(signUpRequest.getHeight());
         user.setRoles(roles);
         user.setUserCode(idGenerationUtil.userCodeGenerator());
         user.setIsActive(1);
