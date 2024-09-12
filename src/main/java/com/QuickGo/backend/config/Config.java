@@ -24,7 +24,10 @@ public class Config {
 
     @Bean
     public RestTemplate restTemplate() {
-        RestTemplate restTemplate = new RestTemplateBuilder().setConnectTimeout(Duration.ofSeconds(30)).setReadTimeout(Duration.ofSeconds(30)).build();
-        return restTemplate;
+        return new RestTemplateBuilder()
+                .setConnectTimeout(Duration.ofSeconds(30))
+                .setReadTimeout(Duration.ofSeconds(30))
+                .build();
+
     }
 }

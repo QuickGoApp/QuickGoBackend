@@ -14,6 +14,7 @@ import com.QuickGo.backend.repository.RoleRepository;
 import com.QuickGo.backend.repository.UserRepository;
 import com.QuickGo.backend.security.jwt.JwtUtils;
 import com.QuickGo.backend.security.services.UserDetailsImpl;
+import com.google.gson.Gson;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequestDTO signUpRequest) {
+
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity.badRequest().body(new ResponseMessage("Error: Username is already taken!"));
         }
