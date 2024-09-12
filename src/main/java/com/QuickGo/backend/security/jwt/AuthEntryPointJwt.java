@@ -1,6 +1,7 @@
 package com.QuickGo.backend.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,6 +25,7 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+
         ErrorLog.info("Unauthorized error: "+ authException.getMessage() +" | path : " +request.getServletPath());
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
