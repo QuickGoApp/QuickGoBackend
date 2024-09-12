@@ -12,7 +12,10 @@ public class Privilege {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer privilegeId;
+
+    @Column(name = "privilege_name")
     private String privilegeName;
+    @Column(name = "status")
     private int status;
 
     @Override
