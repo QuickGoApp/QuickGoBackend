@@ -16,10 +16,11 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+
     @Enumerated(EnumType.STRING)
     private ERole name;
 
-    @Column(columnDefinition = "integer default 1")
+    @Column(name = "is_active",columnDefinition = "integer default 1")
     private int isActive ;
 
     @Override

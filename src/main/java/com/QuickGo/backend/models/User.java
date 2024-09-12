@@ -18,31 +18,46 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "user_code")
     private String userCode;
 
+    @Column(name = "username")
     private String username;
 
+    @Column(name = "email")
     private String email;
 
+    @Column(name = "password")
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "mobile_num")
     private String mobileNum;
 
+    @Column(name = "address")
     private String address;
 
+    @Column(name = "overall_rating")
+    private int overallRating;
+
+    @Column(name = "vehicle_id",columnDefinition = "integer default 0")
+    private int vehicleID;
+
+    @Column(name = "create_date_time")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createDateTime;
 
+    @Column(name = "update_date_time")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateDateTime;
 
-    @Column(columnDefinition = "integer default 1")
+    @Column(name = "is_active",columnDefinition = "integer default 1")
     private int isActive;
 
 

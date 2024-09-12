@@ -17,8 +17,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PrivilegeServiceImpl implements PrivilegeService {
@@ -57,8 +59,13 @@ public class PrivilegeServiceImpl implements PrivilegeService {
 
     @Override
     public ResponseEntity<?> assignPrivileges(PrivilegeDTO privilegeDTO) throws Exception {
-        // Convert the role string to ERole enum
+        if (privilegeDTO.getRole() == null || privilegeDTO.getRole().isEmpty()) {
+            throw new CustomException("role is empty");
+        }
         ERole eRole = ERole.valueOf(privilegeDTO.getRole());
+
+        // Convert the role string to ERole enum
+        eRole = ERole.valueOf(privilegeDTO.getRole());
 
         // Find the role using the ERole enum value
         Optional<Role> roleOptional = roleRepository.findByName(eRole);
@@ -89,4 +96,41 @@ public class PrivilegeServiceImpl implements PrivilegeService {
             return new ResponseEntity<>(new ResponseMessage(HttpStatus.NOT_FOUND.value(), "Role not found"), HttpStatus.NOT_FOUND);
         }
     }
+
+    @Override
+    public ResponseEntity<?> getRoleWisePrivilege(PrivilegeDTO privilegeDTO) throws Exception {
+
+        // Check if the role is not empty
+        if (privilegeDTO.getRole() != null && !privilegeDTO.getRole().isEmpty()) {
+
+            ERole eRole = ERole.valueOf(privilegeDTO.getRole());
+
+            // Find the role using the ERole enum value
+            Optional<Role> roleOptional = roleRepository.findByName(eRole);
+
+            // Check if the role is present
+            if (roleOptional.isPresent()) {
+                // Fetch privileges associated with the role
+                List<PrivilegeDTO> privilegeDTOS = privilegeDetailRepository.findPrivilegeIdsByRole(roleOptional.get()).stream()
+                        .map(this::toPrivilegeDto)
+                        .toList();
+
+                // Check if privilegeDTOS is not empty
+                if (!privilegeDTOS.isEmpty()) {
+                    return new ResponseEntity<>(new ResponseMessage(HttpStatus.OK.value(), "success", privilegeDTOS), HttpStatus.OK);
+                } else {
+                    throw new CustomException("Privilege details are empty");
+                }
+            } else {
+                throw new CustomException("Role not found");
+            }
+        } else {
+            throw new CustomException("Role details are empty");
+        }
+    }
+
+    private PrivilegeDTO toPrivilegeDto(Privilege privilege) {
+        return modelMapper.map(privilege, PrivilegeDTO.class);
+    }
+
 }
