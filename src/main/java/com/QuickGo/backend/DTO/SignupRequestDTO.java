@@ -13,11 +13,6 @@ public class SignupRequestDTO {
     private String name;
     private String mobileNum;
     private String address;
-    private String gender;
-    private Integer height;
-    private Integer weight;
-    private Double bmi;
-    private Integer age;
 
     @NotBlank
     @Size(min = 3, max = 20)

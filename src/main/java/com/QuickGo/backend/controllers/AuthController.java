@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("auth")
+@RequestMapping("/api/v1/quickGo/auth")
 @RequiredArgsConstructor
 public class AuthController {
     final AuthenticationManager authenticationManager;
@@ -102,11 +102,11 @@ public class AuthController {
         } else {
             strRoles.forEach(role -> {
                 switch (role) {
-                    case "admin" -> {
+                    case "ROLE_ADMIN" -> {
                         Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Error:ROLE_ADMIN Role is not found."));
                         roles.add(adminRole);
                     }
-                    case "driver" -> {
+                    case "ROLE_DRIVER" -> {
                         Role modRole = roleRepository.findByName(ERole.ROLE_DRIVER).orElseThrow(() -> new RuntimeException("Error: ROLE_DRIVER Role is not found."));
                         roles.add(modRole);
                     }
@@ -121,8 +121,6 @@ public class AuthController {
         user.setMobileNum(signUpRequest.getMobileNum());
         user.setName(signUpRequest.getName());
         user.setAddress(signUpRequest.getAddress());
-        user.setGender(signUpRequest.getGender());
-        user.setHeight(signUpRequest.getHeight());
         user.setRoles(roles);
         user.setUserCode(idGenerationUtil.userCodeGenerator());
         user.setIsActive(1);
