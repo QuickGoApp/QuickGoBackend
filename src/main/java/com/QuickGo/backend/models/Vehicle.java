@@ -37,6 +37,12 @@ public class Vehicle {
     @Column(name = "vehicle_number")
     private String vehicleNumber;
 
+    @Column(name = "icon")
+    private String icon;
+
+    @Column(name = "image")
+    private String image;
+
     @Column(name = "color")
     private String color;
 
