@@ -1,10 +1,8 @@
 package com.QuickGo.backend.controllers;
 
-import com.QuickGo.backend.DTO.LocationDTO;
-import com.QuickGo.backend.DTO.PrivilegeDTO;
+import com.QuickGo.backend.DTO.TripRequestDetailDTO;
 import com.QuickGo.backend.exception.CustomException;
-import com.QuickGo.backend.service.LocationService;
-import com.google.gson.Gson;
+import com.QuickGo.backend.service.TripService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,17 +11,15 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/quickGo/location")
-public class LocationController {
-
+@RequestMapping(value = "/api/v1/quickGo/trip")
+public class TripController {
     @Autowired
-    LocationService locationService;
-    Gson gson  = new Gson();
+    TripService tripService;
 
-    @PostMapping(value = "/getGeolocationDrivers")
-    ResponseEntity<?> getGeolocationDrivers(@RequestBody LocationDTO locationDTO) throws Exception{
+    @PostMapping(value = "/saveTripRequest")
+    ResponseEntity<?> saveTripRequest(@RequestBody TripRequestDetailDTO requestDetailDTO) throws Exception{
         try {
-            return locationService.getGeolocationDrivers(locationDTO);
+            return tripService.saveTripRequest(requestDetailDTO);
         } catch (CustomException e) {
             throw new CustomException( e.getMessage());
         } catch (Exception e) {
