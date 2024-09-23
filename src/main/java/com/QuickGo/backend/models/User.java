@@ -46,7 +46,7 @@ public class User {
     @Column(name = "overall_rating")
     private int overallRating;
 
-    @Column(name = "vehicle_id",columnDefinition = "integer default 0")
+    @Column(name = "vehicle_id", columnDefinition = "integer default 0")
     private int vehicleID;
 
     @Column(name = "create_date_time")
@@ -57,7 +57,7 @@ public class User {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateDateTime;
 
-    @Column(name = "is_active",columnDefinition = "integer default 1")
+    @Column(name = "is_active", columnDefinition = "integer default 1")
     private int isActive;
 
 
@@ -71,3 +71,5 @@ public class User {
     }
 
 }
+
+
