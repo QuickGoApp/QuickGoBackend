@@ -32,21 +32,23 @@ public class LocationServiceImpl implements LocationService {
                 .seats(3)
                 .isFavorite(true)
                 .userCode("U001")
+                .favoriteID(1)
                 .build();
         locationDriverDTOS.add(dtoValues);
 
         GeoLocationDriverDTO dtoValues2 = GeoLocationDriverDTO.builder()
                 .coordinates(CoordinatesDTO.builder().lat(6.911522).lng(79.867240).build())
-                .name("Siripala")
-                .type("bicycle")
-                .icon("assets/img/vehicle/bicicon.png")
-                .image("https://www.lendingexpert.co.uk/wp-content/uploads/2018/10/Motorbike-finance-guide-and-information.jpg")
-                .vehicleNumber("ACC-4433")
-                .color("green")
-                .rate(2)
-                .seats(1)
-                .isFavorite(true)
-                .userCode("U0034")
+                .name("Siripala")// get user
+                .type("bicycle")//get vehicle
+                .icon("assets/img/vehicle/bicicon.png") // this type wise hardcode (Car/three_wheel/bike)
+                .image("https://www.lendingexpert.co.uk/wp-content/uploads/2018/10/Motorbike-finance-guide-and-information.jpg")//get vehicle table
+                .vehicleNumber("ACC-4433")//get vehicle table
+                .color("green")//get vehicle table
+                .rate(2) // user table
+                .seats(1)//get vehicle table
+                .isFavorite(false) //this mean passenger wise check favorite driver. get is active (1 or 0)
+                .userCode("U0034") // get user table
+                .favoriteID(2)  // this mean passenger wise check favorite driver. get the table id
                 .build();
         locationDriverDTOS.add(dtoValues2);
 

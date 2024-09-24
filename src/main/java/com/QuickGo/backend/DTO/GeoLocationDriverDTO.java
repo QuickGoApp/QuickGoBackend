@@ -19,4 +19,5 @@ public class GeoLocationDriverDTO {
     private int seats;
     private boolean isFavorite;
     private String userCode;
+    private Integer favoriteID;
 }
