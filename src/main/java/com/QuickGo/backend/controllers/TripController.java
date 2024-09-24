@@ -1,5 +1,6 @@
 package com.QuickGo.backend.controllers;
 
+import com.QuickGo.backend.DTO.FavoriteDriverDTO;
 import com.QuickGo.backend.DTO.TripRequestDetailDTO;
 import com.QuickGo.backend.exception.CustomException;
 import com.QuickGo.backend.service.TripService;
@@ -20,6 +21,17 @@ public class TripController {
     ResponseEntity<?> saveTripRequest(@RequestBody TripRequestDetailDTO requestDetailDTO) throws Exception{
         try {
             return tripService.saveTripRequest(requestDetailDTO);
+        } catch (CustomException e) {
+            throw new CustomException( e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @PostMapping(value = "/saveFavoriteDriver")
+    ResponseEntity<?> saveFavoriteDriver(@RequestBody FavoriteDriverDTO favoriteDriverDTO) throws Exception{
+        try {
+            return tripService.saveFavoriteDriver(favoriteDriverDTO);
         } catch (CustomException e) {
             throw new CustomException( e.getMessage());
         } catch (Exception e) {
