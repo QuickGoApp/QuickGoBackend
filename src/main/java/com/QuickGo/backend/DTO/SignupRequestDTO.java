@@ -13,6 +13,7 @@ public class SignupRequestDTO {
     private String name;
     private String mobileNum;
     private String address;
+    private String user_code;
 
     @NotBlank
     @Size(min = 3, max = 20)
@@ -28,5 +29,7 @@ public class SignupRequestDTO {
     @NotBlank
     @Size(min = 6, max = 40)
     private String password;
+
+
 
 }

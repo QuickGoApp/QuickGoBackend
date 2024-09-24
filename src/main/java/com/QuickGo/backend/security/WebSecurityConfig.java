@@ -59,7 +59,9 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/v1/quickGo/auth/signup",
-                                "/api/v1/quickGo/auth/signin"
+                                "/api/v1/quickGo/auth/signin",
+                                "/api/v1/quickGo/auth/vehicle/",
+                                "/api/v1/quickGo/auth/driver/"
                         )
                         .permitAll()
                         .anyRequest().authenticated());

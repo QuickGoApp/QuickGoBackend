@@ -1,5 +1,6 @@
 package com.QuickGo.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,8 +47,8 @@ public class User {
     @Column(name = "overall_rating")
     private int overallRating;
 
-    @Column(name = "vehicle_id",columnDefinition = "integer default 0")
-    private int vehicleID;
+//    @Column(name = "vehicle_id",columnDefinition = "integer default 0")
+//    private int vehicleID;
 
     @Column(name = "create_date_time")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -60,6 +61,10 @@ public class User {
     @Column(name = "is_active",columnDefinition = "integer default 1")
     private int isActive;
 
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "vehicleid")
+    @JsonManagedReference
+    private Vehicle vehicle;
 
     public User() {
     }
@@ -70,4 +75,19 @@ public class User {
         this.password = password;
     }
 
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+
+    //    public Integer getVehicleId() {
+//        return vehicleID;
+//    }
+//
+//    public void setVehicleId(Integer vehicleID) {
+//        this.vehicleID = vehicleID;
+//    }
 }

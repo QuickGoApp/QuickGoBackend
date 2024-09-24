@@ -1,23 +1,25 @@
 package com.QuickGo.backend.controllers;
 
-import com.QuickGo.backend.DTO.JwtResponseDTO;
-import com.QuickGo.backend.DTO.LoginRequestDTO;
+import com.QuickGo.backend.DTO.*;
 import com.QuickGo.backend.DTO.common.ResponseMessage;
-import com.QuickGo.backend.DTO.SignupRequestDTO;
 import com.QuickGo.backend.Util.IdGenerationUtil;
 import com.QuickGo.backend.models.Privilege;
 import com.QuickGo.backend.models.Role;
 import com.QuickGo.backend.models.User;
+import com.QuickGo.backend.models.Vehicle;
 import com.QuickGo.backend.models.enums.ERole;
 import com.QuickGo.backend.repository.PrivilegeDetailRepository;
 import com.QuickGo.backend.repository.RoleRepository;
 import com.QuickGo.backend.repository.UserRepository;
+import com.QuickGo.backend.repository.VehicleRepository;
 import com.QuickGo.backend.security.jwt.JwtUtils;
 import com.QuickGo.backend.security.services.UserDetailsImpl;
 import com.google.gson.Gson;
+import io.jsonwebtoken.io.Decoders;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,10 +30,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.sql.Driver;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -83,7 +83,6 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequestDTO signUpRequest) {
-
         if (userRepository.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity.badRequest().body(new ResponseMessage("Error: Username is already taken!"));
         }
@@ -93,41 +92,57 @@ public class AuthController {
         }
 
         // Create new user's account
-        User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()));
-
+       User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(), encoder.encode(signUpRequest.getPassword()));
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
-        if (strRoles == null) {
-            Role userRole = roleRepository.findByName(ERole.ROLE_PASSENGER).orElseThrow(() -> new RuntimeException("Error: ROLE_PASSENGER Role is not found."));
-            roles.add(userRole);
-        } else {
-            strRoles.forEach(role -> {
-                switch (role) {
-                    case "admin" -> {
-                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Error:ROLE_ADMIN Role is not found."));
-                        roles.add(adminRole);
-                    }
-                    case "driver" -> {
-                        Role modRole = roleRepository.findByName(ERole.ROLE_DRIVER).orElseThrow(() -> new RuntimeException("Error: ROLE_DRIVER Role is not found."));
-                        roles.add(modRole);
-                    }
-                    default -> {
-                        Role userRole = roleRepository.findByName(ERole.ROLE_PASSENGER).orElseThrow(() -> new RuntimeException("Error: ROLE_PASSENGER Role is not found."));
-                        roles.add(userRole);
-                    }
-                }
-            });
-        }
+        strRoles.forEach(role -> {
+            switch (role) {
+                case "ROLE_ADMIN" -> roles.add(roleRepository.findByName(ERole.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Error: ROLE_ADMIN is not found.")));
+                case "ROLE_DRIVER" -> roles.add(roleRepository.findByName(ERole.ROLE_DRIVER).orElseThrow(() -> new RuntimeException("Error: ROLE_DRIVER is not found.")));
+                default -> roles.add(roleRepository.findByName(ERole.ROLE_PASSENGER).orElseThrow(() -> new RuntimeException("Error: ROLE_PASSENGER is not found.")));
+            }
+        });
+
+
+
+//        if (strRoles == null) {
+//            Role userRole = roleRepository.findByName(ERole.ROLE_PASSENGER).orElseThrow(() -> new RuntimeException("Error: ROLE_PASSENGER Role is not found."));
+//            roles.add(userRole);
+//        } else {
+//            strRoles.forEach(role -> {
+//                switch (role) {
+//                    case "admin" -> {
+//                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Error:ROLE_ADMIN Role is not found."));
+//                        roles.add(adminRole);
+//                    }
+////                    case "driver" -> {
+////                        Role modRole = roleRepository.findByName(ERole.ROLE_DRIVER).orElseThrow(() -> new RuntimeException("Error: ROLE_DRIVER Role is not found."));
+////                        roles.add(modRole);
+////                    }
+//                    case "ROLE_DRIVER" -> {
+//                        Role driverRole = roleRepository.findByName(ERole.ROLE_DRIVER)
+//                                .orElseThrow(() -> new RuntimeException("Error: ROLE_DRIVER Role is not found."));
+//                        roles.add(driverRole);
+//                    }
+//                    default -> {
+//                        Role userRole = roleRepository.findByName(ERole.ROLE_PASSENGER).orElseThrow(() -> new RuntimeException("Error: ROLE_PASSENGER Role is not found."));
+//                        roles.add(userRole);
+//                    }
+//                }
+//            });
+//        }
+
+        user.setRoles(roles);
 
         user.setMobileNum(signUpRequest.getMobileNum());
         user.setName(signUpRequest.getName());
         user.setAddress(signUpRequest.getAddress());
-        user.setRoles(roles);
         user.setUserCode(idGenerationUtil.userCodeGenerator());
         user.setIsActive(1);
-        userRepository.save(user);
 
+        userRepository.save(user);
         return ResponseEntity.ok(new ResponseMessage("User registered successfully!"));
     }
+
 }
