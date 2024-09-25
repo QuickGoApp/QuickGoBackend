@@ -8,4 +8,6 @@ public interface TripService {
     ResponseEntity<?> saveTripRequest(TripRequestDetailDTO requestDetailDTO)throws Exception;
 
     ResponseEntity<?> saveFavoriteDriver(FavoriteDriverDTO favoriteDriverDTO)throws Exception;
+
+    ResponseEntity<?> getDriverTrip(FavoriteDriverDTO favoriteDriverDTO)throws Exception;
 }
