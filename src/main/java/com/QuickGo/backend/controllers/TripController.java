@@ -39,4 +39,15 @@ public class TripController {
         }
     }
 
+    @PostMapping(value = "/getDriverTrip")
+    ResponseEntity<?> getDriverTrip(@RequestBody FavoriteDriverDTO favoriteDriverDTO) throws Exception{
+        try {
+            return tripService.getDriverTrip(favoriteDriverDTO);
+        } catch (CustomException e) {
+            throw new CustomException( e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
 }

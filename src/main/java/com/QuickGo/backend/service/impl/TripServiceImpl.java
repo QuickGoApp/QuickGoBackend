@@ -16,11 +16,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TripServiceImpl implements TripService {
     @Autowired
-    TripRepository repository;
+    TripRepository tripRepository;
     @Autowired
     FavoriteDriverRepository favoriteDriverRepository;
 
@@ -42,7 +45,10 @@ public class TripServiceImpl implements TripService {
         if (requestDetailDTO.getDropLat() == 0 || requestDetailDTO.getDropLng() == 0) {
             throw new CustomException("Drop location must have valid coordinates.");
         }
-
+        Optional<Trip> request = tripRepository.findTripByPassengerCodeAndDriveCodeAndStatus(requestDetailDTO.getPassengerCode(), requestDetailDTO.getDriveCode(), "REQUEST");
+        if (request.isPresent()){
+            return new ResponseEntity<>(new ResponseMessage(HttpStatus.TOO_MANY_REQUESTS.value(), "Request is already sent please wait.."), HttpStatus.OK);
+        }
         // Map DTO to entity
         Trip trip = modelMapper.map(requestDetailDTO, Trip.class);
 
@@ -53,7 +59,7 @@ public class TripServiceImpl implements TripService {
         trip.setIsActive(1);
 
 
-        Trip savedTrip = repository.save(trip);
+        Trip savedTrip = tripRepository.save(trip);
         return new ResponseEntity<>(new ResponseMessage(HttpStatus.OK.value(), "success", savedTrip), HttpStatus.OK);
 
     }
@@ -67,20 +73,66 @@ public class TripServiceImpl implements TripService {
             throw new CustomException("Driver code cannot be empty.");
         }
 
-        if (favoriteDriverDTO.getId() > 0){
-            FavoriteDriver referenceById = favoriteDriverRepository.getReferenceById(favoriteDriverDTO.getId());
-            referenceById.setUpdateDateTime(new Date());
-            referenceById.setIsActive(0);
-            return new ResponseEntity<>(new ResponseMessage(HttpStatus.OK.value(), "success", referenceById), HttpStatus.OK);
+
+        Optional<FavoriteDriver> value = favoriteDriverRepository.findFavoriteDriverByPassengerCodeAndDriverCode(favoriteDriverDTO.getPassengerCode(), favoriteDriverDTO.getDriverCode());
+        if (value.isPresent()) {
+            value.get().setUpdateDateTime(new Date());
+            if (value.get().getIsActive() == 0) {
+                value.get().setIsActive(1);
+            } else if (value.get().getIsActive() == 1) {
+                value.get().setIsActive(0);
+            }
+            FavoriteDriver update = favoriteDriverRepository.save(value.get());
+            return new ResponseEntity<>(new ResponseMessage(HttpStatus.OK.value(), "success", update), HttpStatus.OK);
+        } else {
+            FavoriteDriver driver = modelMapper.map(favoriteDriverDTO, FavoriteDriver.class);
+            driver.setIsActive(1);
+            driver.setCreateDateTime(new Date());
+
+            FavoriteDriver save = favoriteDriverRepository.save(driver);
+            return new ResponseEntity<>(new ResponseMessage(HttpStatus.OK.value(), "success", save), HttpStatus.OK);
 
         }
-        FavoriteDriver driver = modelMapper.map(favoriteDriverDTO, FavoriteDriver.class);
-        driver.setIsActive(1);
-        driver.setCreateDateTime(new Date());
 
-        FavoriteDriver save = favoriteDriverRepository.save(driver);
-        return new ResponseEntity<>(new ResponseMessage(HttpStatus.OK.value(), "success", save), HttpStatus.OK);
 
+    }
+
+    @Override
+    public ResponseEntity<?> getDriverTrip(FavoriteDriverDTO favoriteDriverDTO) throws Exception {
+        // Check if the driverCode or passengerCode is null or empty
+        if (favoriteDriverDTO.getDriverCode() == null || favoriteDriverDTO.getDriverCode().isEmpty()) {
+            throw new CustomException("Driver code cannot be empty.");
+        }
+
+        List<Trip> trips = tripRepository.findTripByDriveCodeAndStatus(favoriteDriverDTO.getDriverCode(), "REQUEST");
+
+        if (trips == null || trips.isEmpty()) {
+            throw new CustomException("No trips found for the provided driver.");
+        }
+
+        // Convert the list of Trip entities to TripRequestDetailDTO using Stream
+        List<TripRequestDetailDTO> tripDTOs = trips.stream()
+                .map(trip -> TripRequestDetailDTO.builder()
+                        .tripID(trip.getTripID())
+                        .passengerCode(trip.getPassengerCode())
+                        .driveCode(trip.getDriveCode())
+                        .totalAmount(trip.getTotalAmount())
+                        .paymentMethod(trip.getPaymentMethod())
+                        .status(trip.getStatus())
+                        .driverComment(trip.getDriverComment())
+                        .pickupLat(trip.getPickupLat())
+                        .pickupLng(trip.getPickupLng())
+                        .dropLat(trip.getDropLat())
+                        .dropLng(trip.getDropLng())
+                        .passengerComment(trip.getPassengerComment())
+                        .createDateTime(trip.getCreateDateTime()+"")
+                        .updateDateTime(trip.getUpdateDateTime()+"")
+                        .isActive(trip.getIsActive())
+                        .build())
+                .collect(Collectors.toList());
+
+        // Return the list of TripRequestDetailDTO in the ResponseEntity
+        return new ResponseEntity<>(new ResponseMessage(HttpStatus.OK.value(), "success", tripDTOs), HttpStatus.OK);
     }
 
 }
