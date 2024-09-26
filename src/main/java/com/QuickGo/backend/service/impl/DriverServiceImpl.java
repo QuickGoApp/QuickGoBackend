@@ -3,6 +3,7 @@ package com.QuickGo.backend.service.impl;
 import com.QuickGo.backend.DTO.UserDTO;
 import com.QuickGo.backend.models.Role;
 import com.QuickGo.backend.models.User;
+import com.QuickGo.backend.models.Vehicle;
 import com.QuickGo.backend.repository.UserRepository;
 import com.QuickGo.backend.service.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,11 @@ public class DriverServiceImpl implements DriverService {
 
     @Override
     public ResponseEntity<List<UserDTO>> getDrivers() throws Exception {
-        List<User> drivers = userRepository.findByRoles_Id(2); // Assuming 2 is the RoleId for drivers
+        List<User> drivers = userRepository.findAll();
         List<UserDTO> driverDTOs = new ArrayList<>();
         for (User user: drivers) {
             UserDTO userDTO = new UserDTO();
             userDTO.setId(user.getId());
-            //userDTO.setRole_id(user.getRoles());
             Set<Role> roles = user.getRoles();
             String roleName = roles.stream()
                     .findFirst()
@@ -35,7 +35,6 @@ public class DriverServiceImpl implements DriverService {
                     .orElse("No role assigned");
 
             userDTO.setRole_id(roleName);
-
             userDTO.setName(user.getName());
             userDTO.setUser_code(user.getUserCode());
             userDTO.setAddress(user.getAddress());
@@ -55,7 +54,6 @@ public class DriverServiceImpl implements DriverService {
     public ResponseEntity<User> updateDriver(Long id, UserDTO userData) throws Exception {
         Optional<User> existUser = userRepository.findById(id);
 
-
         if (existUser.isPresent()) {
             User user = existUser.get();
             // Update user details
@@ -68,10 +66,10 @@ public class DriverServiceImpl implements DriverService {
 
             User updatedUser = userRepository.save(user);
 
-            // Return response with updated user
+            // Return response with updated user details
             return ResponseEntity.ok(updatedUser);
         } else {
-            // Return 404 Not Found if user is not present
+            // Return 404 Not Found if user is not available
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
@@ -81,10 +79,12 @@ public class DriverServiceImpl implements DriverService {
         Optional<User> userOptional = userRepository.findById(id);
 
         if (userOptional.isPresent()) {
-            userRepository.deleteById(id);
-            return ResponseEntity.ok().build();  // Return a 200 OK response with no content
+            User user = userOptional.get();
+            user.setIsActive(0);
+            userRepository.save(user);
+            return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // Return 404 if user not found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 }

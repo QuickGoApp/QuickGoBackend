@@ -11,7 +11,7 @@ import java.util.Set;
 public class SignupRequestDTO {
 
     private String name;
-    private String mobileNum;
+    private String mobile_num;
     private String address;
     private String user_code;
 
@@ -29,7 +29,5 @@ public class SignupRequestDTO {
     @NotBlank
     @Size(min = 6, max = 40)
     private String password;
-
-
 
 }

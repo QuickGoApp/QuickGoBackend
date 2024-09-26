@@ -18,9 +18,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findTopByOrderByIdDesc();
 
-    //List<User> findAllByRoleId(int role_id); // Retrieves all users with a specific role
-
-    List<User> findByRoles_Id(int roleId);
-
-    Optional<User> findById(int id);
+    List<User> findByVehicleIsNotNull();
 }

@@ -96,53 +96,41 @@ public class AuthController {
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
 
-        strRoles.forEach(role -> {
-            switch (role) {
-                case "ROLE_ADMIN" -> roles.add(roleRepository.findByName(ERole.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Error: ROLE_ADMIN is not found.")));
-                case "ROLE_DRIVER" -> roles.add(roleRepository.findByName(ERole.ROLE_DRIVER).orElseThrow(() -> new RuntimeException("Error: ROLE_DRIVER is not found.")));
-                default -> roles.add(roleRepository.findByName(ERole.ROLE_PASSENGER).orElseThrow(() -> new RuntimeException("Error: ROLE_PASSENGER is not found.")));
-            }
-        });
-
-
-
-//        if (strRoles == null) {
-//            Role userRole = roleRepository.findByName(ERole.ROLE_PASSENGER).orElseThrow(() -> new RuntimeException("Error: ROLE_PASSENGER Role is not found."));
-//            roles.add(userRole);
-//        } else {
-//            strRoles.forEach(role -> {
-//                switch (role) {
-//                    case "admin" -> {
-//                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Error:ROLE_ADMIN Role is not found."));
-//                        roles.add(adminRole);
-//                    }
-////                    case "driver" -> {
-////                        Role modRole = roleRepository.findByName(ERole.ROLE_DRIVER).orElseThrow(() -> new RuntimeException("Error: ROLE_DRIVER Role is not found."));
-////                        roles.add(modRole);
-////                    }
-//                    case "ROLE_DRIVER" -> {
-//                        Role driverRole = roleRepository.findByName(ERole.ROLE_DRIVER)
-//                                .orElseThrow(() -> new RuntimeException("Error: ROLE_DRIVER Role is not found."));
-//                        roles.add(driverRole);
-//                    }
-//                    default -> {
-//                        Role userRole = roleRepository.findByName(ERole.ROLE_PASSENGER).orElseThrow(() -> new RuntimeException("Error: ROLE_PASSENGER Role is not found."));
-//                        roles.add(userRole);
-//                    }
-//                }
-//            });
-//        }
+        if (strRoles == null) {
+            Role userRole = roleRepository.findByName(ERole.ROLE_PASSENGER).orElseThrow(() -> new RuntimeException("Error: ROLE_PASSENGER Role is not found."));
+            roles.add(userRole);
+        } else {
+            strRoles.forEach(role -> {
+                switch (role) {
+                    case "ROLE_ADMIN" -> {
+                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN).orElseThrow(() -> new RuntimeException("Error:ROLE_ADMIN Role is not found."));
+                        roles.add(adminRole);
+                    }
+                    case "ROLE_DRIVER" -> {
+                        Role driverRole = roleRepository.findByName(ERole.ROLE_DRIVER)
+                                .orElseThrow(() -> new RuntimeException("Error: ROLE_DRIVER Role is not found."));
+                        roles.add(driverRole);
+                    }
+                    case "ROLE_TELEPHONE_OPERATOR" -> {
+                        Role telephoneOperatorRole = roleRepository.findByName(ERole.ROLE_TELEPHONE_OPERATOR)
+                                .orElseThrow(() -> new RuntimeException("Error: ROLE_TELEPHONE_OPERATOR Role is not found."));
+                        roles.add(telephoneOperatorRole);
+                    }
+                    default -> {
+                        Role userRole = roleRepository.findByName(ERole.ROLE_PASSENGER).orElseThrow(() -> new RuntimeException("Error: ROLE_PASSENGER Role is not found."));
+                        roles.add(userRole);
+                    }
+                }
+            });
+        }
 
         user.setRoles(roles);
-
-        user.setMobileNum(signUpRequest.getMobileNum());
+        user.setMobileNum(signUpRequest.getMobile_num());
         user.setName(signUpRequest.getName());
         user.setAddress(signUpRequest.getAddress());
         user.setUserCode(idGenerationUtil.userCodeGenerator());
         user.setIsActive(1);
-
         userRepository.save(user);
         return ResponseEntity.ok(new ResponseMessage("User registered successfully!"));
     }
-
 }
