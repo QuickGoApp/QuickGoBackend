@@ -29,8 +29,13 @@ public class TripController {
     }
 
     @PostMapping(value = "/cancelTripRequest")
-    ResponseEntity<?> cancelTripRequest(@RequestBody TripRequestDetailDTO requestDetailDTO) throws Exception {
+    ResponseEntity<?> cancelTripRequest(@RequestBody TripRequestDetailDTO requestDetailDTO) {
         return ResponseEntity.ok(tripService.cancelTripRequest(requestDetailDTO));
+    }
+
+    @PostMapping("/acceptTripRequest")
+    ResponseEntity<?> acceptTripRequest(@RequestBody TripRequestDetailDTO requestDetailDTO) throws Exception {
+        return ResponseEntity.ok(tripService.acceptTripRequest(requestDetailDTO));
     }
 
     @PostMapping(value = "/saveFavoriteDriver")

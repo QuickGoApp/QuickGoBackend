@@ -2,7 +2,6 @@ package com.QuickGo.backend.controllers;
 
 import com.QuickGo.backend.DTO.GeoLocationDriverDTO;
 import com.QuickGo.backend.service.UserService;
-import com.QuickGo.backend.service.impl.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +18,7 @@ public class DriverController {
 
     @PostMapping(value = "/by/userCodes")
     public ResponseEntity<List<GeoLocationDriverDTO>> findByUserCodes(@RequestBody List<String> userCodes) {
-        return  ResponseEntity.ok(userService.findByUserCodes(userCodes));
+        return ResponseEntity.ok(userService.findByUserCodes(userCodes));
     }
 
 }

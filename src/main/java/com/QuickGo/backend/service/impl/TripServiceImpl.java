@@ -9,7 +9,6 @@ import com.QuickGo.backend.models.Trip;
 import com.QuickGo.backend.repository.FavoriteDriverRepository;
 import com.QuickGo.backend.repository.TripRepository;
 import com.QuickGo.backend.service.TripService;
-import com.google.gson.Gson;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -160,5 +159,39 @@ public class TripServiceImpl implements TripService {
         return new ResponseMessage(HttpStatus.OK.value(), "Trip request cancelled successfully.");
 
     }
+
+    @Override
+    public ResponseMessage acceptTripRequest(TripRequestDetailDTO requestDetailDTO) throws CustomException {
+
+        if (requestDetailDTO.getPassengerCode() == null || requestDetailDTO.getPassengerCode().isEmpty()) {
+            return new ResponseMessage(HttpStatus.BAD_REQUEST.value(), "Passenger code cannot be empty.");
+        }
+
+        tripRepository
+                .findTripByPassengerCodeAndDriveCodeAndStatus(requestDetailDTO.getPassengerCode(), requestDetailDTO.getDriveCode(), "REQUEST")
+                .stream()
+                .findFirst()
+                .map(trip -> {
+                    trip.setStatus("ACCEPTED");
+                    trip.setDriverComment("Trip request accepted by driver");
+                    trip.setUpdateDateTime(new Date());
+                    return tripRepository.save(trip);
+                })
+                .orElseThrow(() -> new CustomException("You have not requested any driver."));
+
+        List<Trip> driverRequests = tripRepository.findTripByDriveCodeAndStatus(requestDetailDTO.getDriveCode(), "REQUEST")
+                .stream()
+                .peek(driverRequest -> {
+                    driverRequest.setStatus("CANCELLED");
+                    driverRequest.setDriverComment("Trip request cancelled by system due to accepting another trip request");
+                    driverRequest.setUpdateDateTime(new Date());
+                })
+                .collect(Collectors.toList());
+
+        tripRepository.saveAll(driverRequests);
+
+        return new ResponseMessage(HttpStatus.OK.value(), "Trip request accepted successfully.");
+    }
+
 
 }

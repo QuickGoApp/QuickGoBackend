@@ -13,4 +13,6 @@ public interface TripService {
     ResponseEntity<?> getDriverTrip(FavoriteDriverDTO favoriteDriverDTO)throws Exception;
 
     ResponseMessage cancelTripRequest(TripRequestDetailDTO requestDetailDTO);
+
+    ResponseMessage acceptTripRequest(TripRequestDetailDTO requestDetailDTO) throws Exception;
 }
