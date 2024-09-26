@@ -9,6 +9,7 @@ import com.QuickGo.backend.models.Trip;
 import com.QuickGo.backend.repository.FavoriteDriverRepository;
 import com.QuickGo.backend.repository.TripRepository;
 import com.QuickGo.backend.service.TripService;
+import com.google.gson.Gson;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,8 +31,11 @@ public class TripServiceImpl implements TripService {
     @Autowired
     private ModelMapper modelMapper;
 
+    Gson gson = new Gson();
+
     @Override
     public ResponseEntity<?> saveTripRequest(TripRequestDetailDTO requestDetailDTO) throws Exception {
+        System.out.println(gson.toJson(requestDetailDTO));
 
         if (requestDetailDTO.getPassengerCode() == null || requestDetailDTO.getPassengerCode().isEmpty()) {
             throw new CustomException("Passenger code cannot be empty.");
@@ -59,7 +63,6 @@ public class TripServiceImpl implements TripService {
 
         trip.setCreateDateTime(new Date());
         trip.setUpdateDateTime(new Date());
-        trip.setTotalAmount(0.00);
         trip.setStatus("REQUEST");
         trip.setIsActive(1);
 
