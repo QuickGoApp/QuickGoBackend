@@ -38,6 +38,12 @@ public class Vehicle {
     @Column(name = "vehicle_number")
     private String vehicleNumber;
 
+    @Column(name = "icon")
+    private String icon;
+
+    @Column(name = "image")
+    private String image;
+
     @Column(name = "color")
     private String color;
 
@@ -50,11 +56,9 @@ public class Vehicle {
     @Column(name = "is_active", columnDefinition = "integer default 1")
     private int isActive;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    @JsonBackReference
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", referencedColumnName = "id")
     private User user;
-
 
     public Vehicle(){
 

@@ -1,5 +1,8 @@
 package com.QuickGo.backend.controllers;
 
+import com.QuickGo.backend.DTO.GeoLocationDriverDTO;
+import com.QuickGo.backend.service.UserService;
+import com.QuickGo.backend.service.impl.UserServiceImpl;
 import com.QuickGo.backend.DTO.UserDTO;
 import com.QuickGo.backend.exception.CustomException;
 import com.QuickGo.backend.models.User;
@@ -11,13 +14,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/v1/quickGo/auth/driver")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
+@RequestMapping(value = "/api/v1/quickGo/driver")
 public class DriverController {
     @Autowired
     private DriverService driverService;
+    private final UserService userService;
 
     @GetMapping("/drivers")
     public ResponseEntity<List<UserDTO>> getDrivers() throws CustomException {
@@ -28,7 +32,6 @@ public class DriverController {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-
     }
 
     @PutMapping("/updateDriver/{id}")
@@ -54,4 +57,8 @@ public class DriverController {
         }
     }
 
+    @PostMapping(value = "/by/userCodes")
+    public ResponseEntity<List<GeoLocationDriverDTO>> findByUserCodes(@RequestBody List<String> userCodes) {
+        return  ResponseEntity.ok(userService.findByUserCodes(userCodes));
+    }
 }

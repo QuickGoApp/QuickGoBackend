@@ -78,7 +78,12 @@ public class AuthController {
                     .map(Privilege::getPrivilegeName)
                     .collect(Collectors.toList());
         }
-        return ResponseEntity.ok(new JwtResponseDTO(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles, privileges));
+        String userCode = null;
+        Optional<User> byId = userRepository.findById(userDetails.getId());
+        if (byId.isPresent()) {
+            userCode = byId.get().getUserCode();
+        }
+        return ResponseEntity.ok(new JwtResponseDTO(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles, privileges,userCode));
     }
 
     @PostMapping("/signup")

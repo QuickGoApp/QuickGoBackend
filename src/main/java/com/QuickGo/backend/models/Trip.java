@@ -35,11 +35,17 @@ public class Trip {
     @Column(name = "driver_comment")
     private String driverComment;
 
-    @Column(name = "pickup_location")
-    private String pickupLocation;
+    @Column(name = "pickup_lat")
+    private double pickupLat;
 
-    @Column(name = "drop_location")
-    private String dropLocation;
+    @Column(name = "pickup_lng")
+    private double pickupLng;
+
+    @Column(name = "drop_lat")
+    private double dropLat;
+
+    @Column(name = "drop_lng")
+    private double dropLng;
 
     @Column(name = "passenger_comment")
     private String passengerComment;

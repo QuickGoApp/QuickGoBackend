@@ -58,13 +58,16 @@ public class User {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateDateTime;
 
-    @Column(name = "is_active",columnDefinition = "integer default 1")
+    @Column(name = "is_active", columnDefinition = "integer default 1")
     private int isActive;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
-    @JoinColumn(name = "vehicleid")
-    @JsonManagedReference
+    @OneToOne(mappedBy = "user")
     private Vehicle vehicle;
+
+//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+//    @JoinColumn(name = "vehicleid")
+//    @JsonManagedReference
+//    private Vehicle vehicle;
 
     public User() {
     }
@@ -91,3 +94,5 @@ public class User {
 //        this.vehicleID = vehicleID;
 //    }
 }
+
+
