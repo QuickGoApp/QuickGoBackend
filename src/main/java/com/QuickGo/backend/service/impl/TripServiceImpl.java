@@ -49,10 +49,15 @@ public class TripServiceImpl implements TripService {
         if (requestDetailDTO.getDropLat() == 0 || requestDetailDTO.getDropLng() == 0) {
             throw new CustomException("Drop location must have valid coordinates.");
         }
-        Optional<Trip> request = tripRepository.findTripByPassengerCodeAndDriveCodeAndStatus(requestDetailDTO.getPassengerCode(), requestDetailDTO.getDriveCode(), "REQUEST");
-        if (request.isPresent()){
-            return new ResponseEntity<>(new ResponseMessage(HttpStatus.TOO_MANY_REQUESTS.value(), "Request is already sent please wait.."), HttpStatus.OK);
-        }
+        List<Trip> passengerRequests = tripRepository.findTripByPassengerCodeAndStatus(requestDetailDTO.getPassengerCode(), "REQUEST");
+        if (passengerRequests.size() > 1)
+            return new ResponseEntity<>(new ResponseMessage(HttpStatus.TOO_MANY_REQUESTS.value(), "You have already requested a driver"), HttpStatus.OK);
+
+        passengerRequests.stream()
+                .filter(passengerRequest -> passengerRequest.getDriveCode().equals(requestDetailDTO.getDriveCode()))
+                .findFirst()
+                .ifPresent(trip -> new ResponseEntity<>(new ResponseMessage(HttpStatus.TOO_MANY_REQUESTS.value(), "You have already requested this driver"), HttpStatus.OK));
+
         // Map DTO to entity
         Trip trip = modelMapper.map(requestDetailDTO, Trip.class);
 
@@ -108,7 +113,6 @@ public class TripServiceImpl implements TripService {
         }
 
         List<Trip> trips = tripRepository.findTripByDriveCodeAndStatus(favoriteDriverDTO.getDriverCode(), "REQUEST");
-
         if (trips == null || trips.isEmpty()) {
             throw new CustomException("No trips found for the provided driver.");
         }
@@ -128,8 +132,8 @@ public class TripServiceImpl implements TripService {
                         .dropLat(trip.getDropLat())
                         .dropLng(trip.getDropLng())
                         .passengerComment(trip.getPassengerComment())
-                        .createDateTime(trip.getCreateDateTime()+"")
-                        .updateDateTime(trip.getUpdateDateTime()+"")
+                        .createDateTime(trip.getCreateDateTime() + "")
+                        .updateDateTime(trip.getUpdateDateTime() + "")
                         .isActive(trip.getIsActive())
                         .build())
                 .collect(Collectors.toList());

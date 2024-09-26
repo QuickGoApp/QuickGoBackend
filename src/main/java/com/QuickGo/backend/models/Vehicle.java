@@ -55,5 +55,8 @@ public class Vehicle {
     @Column(name = "is_active", columnDefinition = "integer default 1")
     private int isActive;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", referencedColumnName = "id")
+    private User user;
 
 }
