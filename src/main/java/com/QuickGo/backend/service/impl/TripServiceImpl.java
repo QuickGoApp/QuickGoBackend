@@ -23,19 +23,16 @@ import java.util.stream.Collectors;
 
 @Service
 public class TripServiceImpl implements TripService {
+
     @Autowired
     TripRepository tripRepository;
     @Autowired
     FavoriteDriverRepository favoriteDriverRepository;
-
     @Autowired
     private ModelMapper modelMapper;
 
-    Gson gson = new Gson();
-
     @Override
     public ResponseEntity<?> saveTripRequest(TripRequestDetailDTO requestDetailDTO) throws Exception {
-        System.out.println(gson.toJson(requestDetailDTO));
 
         if (requestDetailDTO.getPassengerCode() == null || requestDetailDTO.getPassengerCode().isEmpty()) {
             throw new CustomException("Passenger code cannot be empty.");
