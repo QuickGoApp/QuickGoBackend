@@ -10,8 +10,9 @@ import java.util.Optional;
 @Repository
 public interface TripRepository extends JpaRepository<Trip,Integer> {
 
+    List<Trip> findTripByPassengerCodeAndDriveCodeAndStatus(String passengerCode,String driverCode, String status);
+
     List<Trip> findTripByDriveCodeAndStatus( String driverCode, String status);
 
     List<Trip> findTripByPassengerCodeAndStatus(String passengerCode, String request);
-
 }

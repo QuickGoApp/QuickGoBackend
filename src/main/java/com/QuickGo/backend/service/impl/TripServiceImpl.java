@@ -23,19 +23,16 @@ import java.util.stream.Collectors;
 
 @Service
 public class TripServiceImpl implements TripService {
+
     @Autowired
     TripRepository tripRepository;
     @Autowired
     FavoriteDriverRepository favoriteDriverRepository;
-
     @Autowired
     private ModelMapper modelMapper;
 
-    Gson gson = new Gson();
-
     @Override
     public ResponseEntity<?> saveTripRequest(TripRequestDetailDTO requestDetailDTO) throws Exception {
-        System.out.println(gson.toJson(requestDetailDTO));
 
         if (requestDetailDTO.getPassengerCode() == null || requestDetailDTO.getPassengerCode().isEmpty()) {
             throw new CustomException("Passenger code cannot be empty.");
@@ -136,6 +133,28 @@ public class TripServiceImpl implements TripService {
 
         // Return the list of TripRequestDetailDTO in the ResponseEntity
         return new ResponseEntity<>(new ResponseMessage(HttpStatus.OK.value(), "success", tripDTOs), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseMessage cancelTripRequest(TripRequestDetailDTO requestDetailDTO) {
+
+        if (requestDetailDTO.getPassengerCode() == null || requestDetailDTO.getPassengerCode().isEmpty()) {
+            return new ResponseMessage(HttpStatus.BAD_REQUEST.value(), "Passenger code cannot be empty.");
+        }
+
+        List<Trip> passengerRequests = tripRepository.findTripByPassengerCodeAndDriveCodeAndStatus(requestDetailDTO.getPassengerCode(), requestDetailDTO.getDriveCode(), "REQUEST");
+        if (passengerRequests.isEmpty()) {
+            return new ResponseMessage(HttpStatus.NOT_FOUND.value(), "You have not requested any driver.");
+        }
+
+        Trip trip = passengerRequests.get(0);
+        trip.setStatus("CANCELLED");
+        trip.setPassengerComment("Trip request cancelled by passenger");
+        trip.setUpdateDateTime(new Date());
+        tripRepository.save(trip);
+
+        return new ResponseMessage(HttpStatus.OK.value(), "Trip request cancelled successfully.");
+
     }
 
 }
