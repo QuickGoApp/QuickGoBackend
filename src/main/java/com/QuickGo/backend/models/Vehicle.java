@@ -60,12 +60,6 @@ public class Vehicle {
 
     }
 
-//    public Vehicle(String vehicleName, String vehicleNumber, String color) {
-//        this.vehicleName = vehicleName;
-//        this.vehicleNumber = vehicleNumber;
-//        this.color = color;
-//    }
-
-
-
+    public void setUser(Long selectedDriver) {
+    }
 }
