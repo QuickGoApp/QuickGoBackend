@@ -24,7 +24,7 @@ public class Trip {
     private String driveCode;
 
     @Column(name = "total_amount")
-    private Double totalAmount;
+    private double totalAmount;
 
     @Column(name = "payment_method")
     private String paymentMethod;
@@ -49,6 +49,12 @@ public class Trip {
 
     @Column(name = "passenger_comment")
     private String passengerComment;
+
+    @Column(name = "contact_number")
+    private String contactNumber;
+
+    @Column(name = "friend_contact")
+    private String friendContact;
 
     @Column(name = "create_date_time")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
