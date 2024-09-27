@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -16,6 +17,12 @@ public class MailServiceImpl implements MailService {
     @Autowired
     public MailServiceImpl(JavaMailSender mailSender) {
         this.mailSender = mailSender;
+    }
+
+    @Async
+    @Override
+    public void sendEmailAsync(String recipient, String subject, String body) {
+        sendEmail(recipient, subject, body);
     }
 
     @Override

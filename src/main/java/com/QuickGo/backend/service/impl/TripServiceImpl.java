@@ -6,8 +6,11 @@ import com.QuickGo.backend.DTO.common.ResponseMessage;
 import com.QuickGo.backend.exception.CustomException;
 import com.QuickGo.backend.models.FavoriteDriver;
 import com.QuickGo.backend.models.Trip;
+import com.QuickGo.backend.models.User;
 import com.QuickGo.backend.repository.FavoriteDriverRepository;
 import com.QuickGo.backend.repository.TripRepository;
+import com.QuickGo.backend.repository.UserRepository;
+import com.QuickGo.backend.service.MailService;
 import com.QuickGo.backend.service.TripService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,10 @@ public class TripServiceImpl implements TripService {
     FavoriteDriverRepository favoriteDriverRepository;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private MailService mailService;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public ResponseEntity<?> saveTripRequest(TripRequestDetailDTO requestDetailDTO) throws Exception {
@@ -56,6 +63,15 @@ public class TripServiceImpl implements TripService {
 
         // Map DTO to entity
         Trip trip = modelMapper.map(requestDetailDTO, Trip.class);
+
+        userRepository.findByUserCodeIn(List.of(requestDetailDTO.getPassengerCode(), requestDetailDTO.getDriveCode()))
+                .forEach(user -> {
+                    if (user.getUserCode().equals(requestDetailDTO.getPassengerCode())) {
+                        trip.setPassenger(user);
+                    } else if (user.getUserCode().equals(requestDetailDTO.getDriveCode())) {
+                        trip.setDriver(user);
+                    }
+                });
 
         trip.setCreateDateTime(new Date());
         trip.setUpdateDateTime(new Date());
@@ -175,7 +191,15 @@ public class TripServiceImpl implements TripService {
                     trip.setStatus("ACCEPTED");
                     trip.setDriverComment("Trip request accepted by driver");
                     trip.setUpdateDateTime(new Date());
-                    return tripRepository.save(trip);
+
+                    Trip save = tripRepository.save(trip);
+
+                    mailService.sendEmailAsync(
+                            trip.getPassenger().getEmail(),
+                            "Trip request accepted",
+                            generateEmailBody(trip)
+                    );
+                    return save;
                 })
                 .orElseThrow(() -> new CustomException("You have not requested any driver."));
 
@@ -191,6 +215,98 @@ public class TripServiceImpl implements TripService {
         tripRepository.saveAll(driverRequests);
 
         return new ResponseMessage(HttpStatus.OK.value(), "Trip request accepted successfully.");
+    }
+
+    public String generateEmailBody(Trip trip) {
+        User driver = trip.getDriver();
+
+        String emailTemplate = """
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Trip Request Accepted</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            background-color: #f4f4f4;
+                            margin: 0;
+                            padding: 0;
+                        }
+                        .container {
+                            background-color: #ffffff;
+                            width: 80%%;
+                            max-width: 600px;
+                            margin: 20px auto;
+                            padding: 20px;
+                            border-radius: 10px;
+                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                        }
+                        .header {
+                            background-color: #007bff;
+                            color: #ffffff;
+                            text-align: center;
+                            padding: 10px;
+                            border-top-left-radius: 10px;
+                            border-top-right-radius: 10px;
+                        }
+                        .header h1 {
+                            margin: 0;
+                            font-size: 24px;
+                        }
+                        .content {
+                            margin: 20px 0;
+                            line-height: 1.6;
+                        }
+                        .content p {
+                            margin: 10px 0;
+                        }
+                        .footer {
+                            text-align: center;
+                            color: #666666;
+                            font-size: 14px;
+                            padding-top: 10px;
+                            border-top: 1px solid #dddddd;
+                        }
+                        .footer p {
+                            margin: 5px 0;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <div class="header">
+                            <h1>Trip Request Accepted</h1>
+                        </div>
+                        <div class="content">
+                            <p>Dear Passenger,</p>
+                            <p>Your trip request has been accepted by the driver.</p>
+                            <p>
+                                <strong>Driver:</strong> %s<br>
+                                <strong>Vehicle Number:</strong> %s<br>
+                                <strong>Vehicle Type:</strong> %s<br>
+                                <strong>Vehicle Color:</strong> %s<br>
+                                <strong>Driver Contact Number:</strong> %s<br>
+                            </p>
+                            <p>Thank you for choosing our service!</p>
+                        </div>
+                        <div class="footer">
+                            <p>&copy; 2024 Your Company Name. All rights reserved.</p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+                """;
+
+        return emailTemplate.formatted(
+                driver.getName(),
+                driver.getVehicle().getVehicleNumber(),
+                driver.getVehicle().getType(),
+                driver.getVehicle().getColor(),
+                trip.getContactNumber()
+        );
+
     }
 
 
