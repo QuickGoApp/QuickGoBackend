@@ -4,6 +4,7 @@ import com.QuickGo.backend.DTO.UserDTO;
 import com.QuickGo.backend.models.Role;
 import com.QuickGo.backend.models.User;
 import com.QuickGo.backend.models.Vehicle;
+import com.QuickGo.backend.repository.RoleRepository;
 import com.QuickGo.backend.repository.UserRepository;
 import com.QuickGo.backend.service.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,7 @@ public class DriverServiceImpl implements DriverService {
             user.setEmail(userData.getEmail());
             user.setMobileNum(userData.getMobile_num());
             user.setUsername(userData.getUsername());
+
 
             User updatedUser = userRepository.save(user);
 

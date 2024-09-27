@@ -34,7 +34,7 @@ public class VehicleServiceImpl implements VehicleService {
 
         for (User user : usersWithVehicle) {
             VehicleDTO vehicleDTO = new VehicleDTO();
-            Vehicle vehicle = vehicleRepository.findById((long) user.getVehicle().getVehicleid()).orElse(null);
+            Vehicle vehicle = vehicleRepository.findById((int) user.getVehicle().getVehicleid()).orElse(null);
 
             if (vehicle != null) {
                 vehicleDTO.setId(vehicle.getVehicleid());
@@ -76,7 +76,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public ResponseEntity<Vehicle> updateVehicle(int id, VehicleDTO vehicleData) throws Exception {
-        Optional<Vehicle> existVehicle = vehicleRepository.findById((long) id);
+        Optional<Vehicle> existVehicle = vehicleRepository.findById((int) id);
 
 
         if (existVehicle.isPresent()) {
@@ -102,7 +102,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public ResponseEntity<Void> deleteVehicle(int id) throws Exception {
-        Optional<Vehicle> vehicleOptional = vehicleRepository.findById((long) id);
+        Optional<Vehicle> vehicleOptional = vehicleRepository.findById((int) id);
 
         if (vehicleOptional.isPresent()) {
             Vehicle vehicle = vehicleOptional.get();

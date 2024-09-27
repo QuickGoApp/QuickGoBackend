@@ -47,9 +47,6 @@ public class User {
     @Column(name = "overall_rating")
     private int overallRating;
 
-//    @Column(name = "vehicle_id",columnDefinition = "integer default 0")
-//    private int vehicleID;
-
     @Column(name = "create_date_time")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createDateTime;
@@ -62,12 +59,8 @@ public class User {
     private int isActive;
 
     @OneToOne(mappedBy = "user")
+    @JoinColumn(name = "vehicleid", referencedColumnName = "vehicleid")
     private Vehicle vehicle;
-
-//    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
-//    @JoinColumn(name = "vehicleid")
-//    @JsonManagedReference
-//    private Vehicle vehicle;
 
     public User() {
     }
@@ -86,13 +79,6 @@ public class User {
         this.vehicle = vehicle;
     }
 
-    //    public Integer getVehicleId() {
-//        return vehicleID;
-//    }
-//
-//    public void setVehicleId(Integer vehicleID) {
-//        this.vehicleID = vehicleID;
-//    }
 }
 
 
