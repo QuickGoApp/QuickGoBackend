@@ -1,6 +1,7 @@
 package com.QuickGo.backend.service.impl;
 
 import com.QuickGo.backend.DTO.CoordinatesDTO;
+import com.QuickGo.backend.DTO.DriverCoordinateDto;
 import com.QuickGo.backend.DTO.GeoLocationDriverDTO;
 import com.QuickGo.backend.models.User;
 import com.QuickGo.backend.repository.UserRepository;
@@ -17,16 +18,27 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public List<GeoLocationDriverDTO> findByUserCodes(List<String> userCodes) {
+    public List<GeoLocationDriverDTO> findByUserCodes(List<DriverCoordinateDto> request) {
+        List<String> userCodes = request.stream()
+                .map(DriverCoordinateDto::getDriverCode)
+                .toList();
         return userRepository.findByUserCodeIn(userCodes)
                 .stream()
                 .filter(user -> user.getVehicle() != null)
-                .map(this::toGeoLocationDriverDTO)
+                .map(x -> toGeoLocationDriverDTO(x, request))
                 .toList();
     }
 
-    private GeoLocationDriverDTO toGeoLocationDriverDTO(User driver) {
+    private GeoLocationDriverDTO toGeoLocationDriverDTO(User driver, List<DriverCoordinateDto> request) {
+        DriverCoordinateDto driverCoordinateDto = request.stream()
+                .filter(x -> x.getDriverCode().equals(driver.getUserCode()))
+                .findFirst()
+                .orElseThrow();
         return GeoLocationDriverDTO.builder()
+                .coordinates(CoordinatesDTO.builder()
+                        .lat(driverCoordinateDto.getLat())
+                        .lng(driverCoordinateDto.getLng())
+                        .build())
                 .name(driver.getName())
                 .type(driver.getVehicle().getType())
                 .icon(driver.getVehicle().getIcon())

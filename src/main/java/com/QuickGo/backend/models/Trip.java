@@ -23,6 +23,14 @@ public class Trip {
     @Column(name = "drive_code")
     private String driveCode;
 
+    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "passengerId")
+    private User passenger;
+
+    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
+    @JoinColumn(name = "driverId")
+    private User driver;
+
     @Column(name = "total_amount")
     private double totalAmount;
 
