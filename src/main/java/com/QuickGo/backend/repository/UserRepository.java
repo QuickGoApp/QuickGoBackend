@@ -19,4 +19,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findTopByOrderByIdDesc();
 
     List<User> findByUserCodeIn(List<String> userCodes);
+
+    List<User> findByVehicleIsNotNull();
 }

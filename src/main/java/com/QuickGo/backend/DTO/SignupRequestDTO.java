@@ -11,8 +11,9 @@ import java.util.Set;
 public class SignupRequestDTO {
 
     private String name;
-    private String mobileNum;
+    private String mobile_num;
     private String address;
+    private String user_code;
 
     @NotBlank
     @Size(min = 3, max = 20)

@@ -1,5 +1,6 @@
 package com.QuickGo.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -58,8 +59,8 @@ public class User {
     private int isActive;
 
     @OneToOne(mappedBy = "user")
+    @JoinColumn(name = "vehicleid", referencedColumnName = "vehicleid")
     private Vehicle vehicle;
-
 
     public User() {
     }
@@ -68,6 +69,14 @@ public class User {
         this.username = username;
         this.email = email;
         this.password = password;
+    }
+
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
     }
 
 }
