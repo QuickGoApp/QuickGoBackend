@@ -1,8 +1,8 @@
 package com.QuickGo.backend.controllers;
 
+import com.QuickGo.backend.DTO.DriverCoordinateDto;
 import com.QuickGo.backend.DTO.GeoLocationDriverDTO;
 import com.QuickGo.backend.service.UserService;
-import com.QuickGo.backend.service.impl.UserServiceImpl;
 import com.QuickGo.backend.DTO.UserDTO;
 import com.QuickGo.backend.exception.CustomException;
 import com.QuickGo.backend.models.User;
@@ -58,7 +58,7 @@ public class DriverController {
     }
 
     @PostMapping(value = "/by/userCodes")
-    public ResponseEntity<List<GeoLocationDriverDTO>> findByUserCodes(@RequestBody List<String> userCodes) {
+    public ResponseEntity<List<GeoLocationDriverDTO>> findByUserCodes(@RequestBody List<DriverCoordinateDto> userCodes) {
         return ResponseEntity.ok(userService.findByUserCodes(userCodes));
     }
 }
