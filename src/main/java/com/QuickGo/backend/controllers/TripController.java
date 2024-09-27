@@ -18,33 +18,43 @@ public class TripController {
     TripService tripService;
 
     @PostMapping(value = "/saveTripRequest")
-    ResponseEntity<?> saveTripRequest(@RequestBody TripRequestDetailDTO requestDetailDTO) throws Exception{
+    ResponseEntity<?> saveTripRequest(@RequestBody TripRequestDetailDTO requestDetailDTO) throws Exception {
         try {
             return tripService.saveTripRequest(requestDetailDTO);
         } catch (CustomException e) {
-            throw new CustomException( e.getMessage());
+            throw new CustomException(e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
+    @PostMapping(value = "/cancelTripRequest")
+    ResponseEntity<?> cancelTripRequest(@RequestBody TripRequestDetailDTO requestDetailDTO) {
+        return ResponseEntity.ok(tripService.cancelTripRequest(requestDetailDTO));
+    }
+
+    @PostMapping("/acceptTripRequest")
+    ResponseEntity<?> acceptTripRequest(@RequestBody TripRequestDetailDTO requestDetailDTO) throws Exception {
+        return ResponseEntity.ok(tripService.acceptTripRequest(requestDetailDTO));
+    }
+
     @PostMapping(value = "/saveFavoriteDriver")
-    ResponseEntity<?> saveFavoriteDriver(@RequestBody FavoriteDriverDTO favoriteDriverDTO) throws Exception{
+    ResponseEntity<?> saveFavoriteDriver(@RequestBody FavoriteDriverDTO favoriteDriverDTO) throws Exception {
         try {
             return tripService.saveFavoriteDriver(favoriteDriverDTO);
         } catch (CustomException e) {
-            throw new CustomException( e.getMessage());
+            throw new CustomException(e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
     }
 
     @PostMapping(value = "/getDriverTrip")
-    ResponseEntity<?> getDriverTrip(@RequestBody FavoriteDriverDTO favoriteDriverDTO) throws Exception{
+    ResponseEntity<?> getDriverTrip(@RequestBody FavoriteDriverDTO favoriteDriverDTO) throws Exception {
         try {
             return tripService.getDriverTrip(favoriteDriverDTO);
         } catch (CustomException e) {
-            throw new CustomException( e.getMessage());
+            throw new CustomException(e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }

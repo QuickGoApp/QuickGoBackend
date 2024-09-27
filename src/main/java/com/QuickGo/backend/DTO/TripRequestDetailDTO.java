@@ -11,7 +11,7 @@ public class TripRequestDetailDTO {
     private Integer tripID;
     private String passengerCode;
     private String driveCode;
-    private Double totalAmount;
+    private double totalAmount;
     private String paymentMethod;
     private String status;
     private String driverComment;
@@ -22,5 +22,7 @@ public class TripRequestDetailDTO {
     private String passengerComment;
     private String createDateTime;
     private String updateDateTime;
+    private String friendContact;
+    private String contactNumber;
     private int isActive;
 }

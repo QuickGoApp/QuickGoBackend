@@ -2,6 +2,7 @@ package com.QuickGo.backend.service;
 
 import com.QuickGo.backend.DTO.FavoriteDriverDTO;
 import com.QuickGo.backend.DTO.TripRequestDetailDTO;
+import com.QuickGo.backend.DTO.common.ResponseMessage;
 import org.springframework.http.ResponseEntity;
 
 public interface TripService {
@@ -10,4 +11,8 @@ public interface TripService {
     ResponseEntity<?> saveFavoriteDriver(FavoriteDriverDTO favoriteDriverDTO)throws Exception;
 
     ResponseEntity<?> getDriverTrip(FavoriteDriverDTO favoriteDriverDTO)throws Exception;
+
+    ResponseMessage cancelTripRequest(TripRequestDetailDTO requestDetailDTO);
+
+    ResponseMessage acceptTripRequest(TripRequestDetailDTO requestDetailDTO) throws Exception;
 }

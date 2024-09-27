@@ -59,6 +59,6 @@ public class DriverController {
 
     @PostMapping(value = "/by/userCodes")
     public ResponseEntity<List<GeoLocationDriverDTO>> findByUserCodes(@RequestBody List<String> userCodes) {
-        return  ResponseEntity.ok(userService.findByUserCodes(userCodes));
+        return ResponseEntity.ok(userService.findByUserCodes(userCodes));
     }
 }
