@@ -20,18 +20,11 @@ public class VehicleController {
     @Autowired
     private VehicleService vehicleService;
 
-    @PostMapping("/vehicle")
-    public ResponseEntity<?> saveVehicle(@Valid @RequestBody VehicleDTO vehicleDTO) throws CustomException {
-        try {
-            return vehicleService.saveVehicle(vehicleDTO);
-        } catch (CustomException e) {
-            throw new CustomException(e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+    @PostMapping("/save")
+    public ResponseEntity<?> saveVehicle(@Valid @RequestBody VehicleDTO vehicleDTO) {
+        return ResponseEntity.ok(vehicleService.saveVehicle(vehicleDTO));
     }
 
-    @CrossOrigin(origins = "*")
     @GetMapping("/vehicles")
     public ResponseEntity<List<VehicleDTO>> getVehicles() throws CustomException {
         try {

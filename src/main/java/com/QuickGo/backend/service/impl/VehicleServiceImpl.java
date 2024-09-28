@@ -51,24 +51,25 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public ResponseEntity<?> saveVehicle(VehicleDTO vehicleDTO) throws Exception {
-        Vehicle vehicle = new Vehicle();
-        vehicle.setVehicleName(vehicleDTO.getVehicle_name());
-        vehicle.setVehicleNumber(vehicleDTO.getVehicle_number());
-        vehicle.setType(vehicleDTO.getType());
-        vehicle.setColor(vehicleDTO.getColor());
-        vehicle.setVehicleConditions(vehicleDTO.getVehicle_conditions());
-        vehicle.setSeats(vehicleDTO.getSeats());
-        vehicle.setIsActive(1);
-        Vehicle vehicles = vehicleRepository.save(vehicle);
+    public ResponseMessage saveVehicle(VehicleDTO vehicleDTO) {
+        return userRepository.findById(vehicleDTO.getSelectedDriver())
+                .map(user -> {
+                    Vehicle vehicle = new Vehicle();
+                    vehicle.setVehicleName(vehicleDTO.getVehicle_name());
+                    vehicle.setVehicleNumber(vehicleDTO.getVehicle_number());
+                    vehicle.setType(vehicleDTO.getType());
+                    vehicle.setColor(vehicleDTO.getColor());
+                    vehicle.setVehicleConditions(vehicleDTO.getVehicle_conditions());
+                    vehicle.setSeats(vehicleDTO.getSeats());
+                    vehicle.setIsActive(1);
+                    vehicleRepository.save(vehicle);
 
-        Optional<User> driver = userRepository.findById(vehicleDTO.getSelectedDriver());
-        if (driver.isPresent()) {
-            User driverUser = driver.get();
-            driverUser.setVehicle(vehicles);
-            userRepository.save(driverUser);
-        }
-        return ResponseEntity.ok(new ResponseMessage("Saved vehicle successfully!"));
+                    user.setVehicle(vehicle);
+                    userRepository.save(user);
+
+                    return new ResponseMessage(HttpStatus.OK.value(), "Saved vehicle successfully!");
+                })
+                .orElse(new ResponseMessage(HttpStatus.NOT_FOUND.value(), "Driver not found!"));
     }
 
     @Override
