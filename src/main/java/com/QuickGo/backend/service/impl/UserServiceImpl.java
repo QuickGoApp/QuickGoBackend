@@ -1,8 +1,8 @@
 package com.QuickGo.backend.service.impl;
 
-import com.QuickGo.backend.DTO.CoordinatesDTO;
-import com.QuickGo.backend.DTO.DriverCoordinateDto;
-import com.QuickGo.backend.DTO.GeoLocationDriverDTO;
+import com.QuickGo.backend.dto.CoordinatesDTO;
+import com.QuickGo.backend.dto.DriverCoordinateDto;
+import com.QuickGo.backend.dto.GeoLocationDriverDTO;
 import com.QuickGo.backend.models.User;
 import com.QuickGo.backend.repository.UserRepository;
 import com.QuickGo.backend.service.UserService;

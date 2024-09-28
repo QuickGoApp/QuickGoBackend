@@ -1,6 +1,6 @@
 package com.QuickGo.backend.service;
 
-import com.QuickGo.backend.DTO.PrivilegeDTO;
+import com.QuickGo.backend.dto.PrivilegeDTO;
 import org.springframework.http.ResponseEntity;
 
 public interface PrivilegeService {

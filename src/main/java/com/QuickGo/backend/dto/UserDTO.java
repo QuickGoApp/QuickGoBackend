@@ -1,4 +1,4 @@
-package com.QuickGo.backend.DTO;
+package com.QuickGo.backend.dto;
 
 public class UserDTO {
     private Long id;

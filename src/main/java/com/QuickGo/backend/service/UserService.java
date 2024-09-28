@@ -1,8 +1,7 @@
 package com.QuickGo.backend.service;
 
-import com.QuickGo.backend.DTO.DriverCoordinateDto;
-import com.QuickGo.backend.DTO.GeoLocationDriverDTO;
-import org.springframework.http.HttpStatusCode;
+import com.QuickGo.backend.dto.DriverCoordinateDto;
+import com.QuickGo.backend.dto.GeoLocationDriverDTO;
 
 import java.util.List;
 

@@ -1,9 +1,9 @@
 package com.QuickGo.backend.service.impl;
 
-import com.QuickGo.backend.DTO.CoordinatesDTO;
-import com.QuickGo.backend.DTO.GeoLocationDriverDTO;
-import com.QuickGo.backend.DTO.LocationDTO;
-import com.QuickGo.backend.DTO.common.ResponseMessage;
+import com.QuickGo.backend.dto.CoordinatesDTO;
+import com.QuickGo.backend.dto.GeoLocationDriverDTO;
+import com.QuickGo.backend.dto.LocationDTO;
+import com.QuickGo.backend.dto.common.ResponseMessage;
 import com.QuickGo.backend.service.LocationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,6 +1,6 @@
 package com.QuickGo.backend.exception;
 
-import com.QuickGo.backend.DTO.common.ResponseMessage;
+import com.QuickGo.backend.dto.common.ResponseMessage;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;

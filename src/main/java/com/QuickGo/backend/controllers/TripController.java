@@ -1,7 +1,7 @@
 package com.QuickGo.backend.controllers;
 
-import com.QuickGo.backend.DTO.FavoriteDriverDTO;
-import com.QuickGo.backend.DTO.TripRequestDetailDTO;
+import com.QuickGo.backend.dto.FavoriteDriverDTO;
+import com.QuickGo.backend.dto.TripRequestDetailDTO;
 import com.QuickGo.backend.exception.CustomException;
 import com.QuickGo.backend.service.TripService;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +37,12 @@ public class TripController {
     ResponseEntity<?> acceptTripRequest(@RequestBody TripRequestDetailDTO requestDetailDTO) throws Exception {
         return ResponseEntity.ok(tripService.acceptTripRequest(requestDetailDTO));
     }
+
+    @PostMapping("/endTripRequest")
+    ResponseEntity<?> endTripRequest(@RequestBody TripRequestDetailDTO requestDetailDTO) throws Exception {
+        return ResponseEntity.ok(tripService.endTripRequest(requestDetailDTO));
+    }
+
 
     @PostMapping(value = "/saveFavoriteDriver")
     ResponseEntity<?> saveFavoriteDriver(@RequestBody FavoriteDriverDTO favoriteDriverDTO) throws Exception {

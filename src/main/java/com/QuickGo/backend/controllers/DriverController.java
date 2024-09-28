@@ -1,9 +1,9 @@
 package com.QuickGo.backend.controllers;
 
-import com.QuickGo.backend.DTO.DriverCoordinateDto;
-import com.QuickGo.backend.DTO.GeoLocationDriverDTO;
+import com.QuickGo.backend.dto.DriverCoordinateDto;
+import com.QuickGo.backend.dto.GeoLocationDriverDTO;
 import com.QuickGo.backend.service.UserService;
-import com.QuickGo.backend.DTO.UserDTO;
+import com.QuickGo.backend.dto.UserDTO;
 import com.QuickGo.backend.exception.CustomException;
 import com.QuickGo.backend.models.User;
 import com.QuickGo.backend.service.DriverService;

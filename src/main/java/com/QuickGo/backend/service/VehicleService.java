@@ -1,8 +1,6 @@
 package com.QuickGo.backend.service;
 
-import com.QuickGo.backend.DTO.UserDTO;
-import com.QuickGo.backend.DTO.VehicleDTO;
-import com.QuickGo.backend.models.User;
+import com.QuickGo.backend.dto.VehicleDTO;
 import com.QuickGo.backend.models.Vehicle;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;

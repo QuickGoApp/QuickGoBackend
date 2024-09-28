@@ -1,7 +1,6 @@
 package com.QuickGo.backend.controllers;
 
-import com.QuickGo.backend.DTO.LocationDTO;
-import com.QuickGo.backend.DTO.PrivilegeDTO;
+import com.QuickGo.backend.dto.LocationDTO;
 import com.QuickGo.backend.exception.CustomException;
 import com.QuickGo.backend.service.LocationService;
 import com.google.gson.Gson;

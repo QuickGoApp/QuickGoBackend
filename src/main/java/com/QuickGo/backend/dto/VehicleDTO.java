@@ -1,7 +1,5 @@
-package com.QuickGo.backend.DTO;
+package com.QuickGo.backend.dto;
 import lombok.Data;
-
-import java.util.Set;
 
 @Data
 public class VehicleDTO {

@@ -1,4 +1,4 @@
-package com.QuickGo.backend.DTO.common;
+package com.QuickGo.backend.dto.common;
 
 import lombok.Getter;
 import lombok.Setter;

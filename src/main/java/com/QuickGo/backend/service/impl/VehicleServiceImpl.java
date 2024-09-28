@@ -1,9 +1,7 @@
 package com.QuickGo.backend.service.impl;
 
-import com.QuickGo.backend.DTO.UserDTO;
-import com.QuickGo.backend.DTO.VehicleDTO;
-import com.QuickGo.backend.DTO.common.ResponseMessage;
-import com.QuickGo.backend.models.Role;
+import com.QuickGo.backend.dto.VehicleDTO;
+import com.QuickGo.backend.dto.common.ResponseMessage;
 import com.QuickGo.backend.models.User;
 import com.QuickGo.backend.models.Vehicle;
 import com.QuickGo.backend.repository.UserRepository;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 
 @Service

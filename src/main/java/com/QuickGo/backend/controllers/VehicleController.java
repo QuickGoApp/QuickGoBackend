@@ -1,9 +1,7 @@
 package com.QuickGo.backend.controllers;
 
-import com.QuickGo.backend.DTO.UserDTO;
-import com.QuickGo.backend.DTO.VehicleDTO;
+import com.QuickGo.backend.dto.VehicleDTO;
 import com.QuickGo.backend.exception.CustomException;
-import com.QuickGo.backend.models.User;
 import com.QuickGo.backend.models.Vehicle;
 import com.QuickGo.backend.service.VehicleService;
 import jakarta.validation.Valid;

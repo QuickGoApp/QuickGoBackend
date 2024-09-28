@@ -59,7 +59,7 @@ public class User {
     private int isActive;
 
     @OneToOne(mappedBy = "user")
-    @JoinColumn(name = "vehicleid", referencedColumnName = "vehicleid")
+    @JoinColumn(name = "vehicle_d", referencedColumnName = "vehicle_id")
     private Vehicle vehicle;
 
     public User() {

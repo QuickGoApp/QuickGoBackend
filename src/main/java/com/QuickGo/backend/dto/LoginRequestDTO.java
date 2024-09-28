@@ -1,4 +1,4 @@
-package com.QuickGo.backend.DTO;
+package com.QuickGo.backend.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

@@ -1,8 +1,8 @@
 package com.QuickGo.backend.service.impl;
 
-import com.QuickGo.backend.DTO.FavoriteDriverDTO;
-import com.QuickGo.backend.DTO.TripRequestDetailDTO;
-import com.QuickGo.backend.DTO.common.ResponseMessage;
+import com.QuickGo.backend.dto.FavoriteDriverDTO;
+import com.QuickGo.backend.dto.TripRequestDetailDTO;
+import com.QuickGo.backend.dto.common.ResponseMessage;
 import com.QuickGo.backend.exception.CustomException;
 import com.QuickGo.backend.models.FavoriteDriver;
 import com.QuickGo.backend.models.Trip;
@@ -215,6 +215,27 @@ public class TripServiceImpl implements TripService {
         tripRepository.saveAll(driverRequests);
 
         return new ResponseMessage(HttpStatus.OK.value(), "Trip request accepted successfully.");
+    }
+
+    @Override
+    public ResponseMessage endTripRequest(TripRequestDetailDTO requestDetailDTO) {
+
+            if (requestDetailDTO.getPassengerCode() == null || requestDetailDTO.getPassengerCode().isEmpty()) {
+                return new ResponseMessage(HttpStatus.BAD_REQUEST.value(), "Passenger code cannot be empty.");
+            }
+
+            List<Trip> passengerRequests = tripRepository.findTripByPassengerCodeAndDriveCodeAndStatus(requestDetailDTO.getPassengerCode(), requestDetailDTO.getDriveCode(), "ACCEPTED");
+            if (passengerRequests.isEmpty()) {
+                return new ResponseMessage(HttpStatus.NOT_FOUND.value(), "You have not accepted any trip request.");
+            }
+
+            Trip trip = passengerRequests.get(0);
+            trip.setStatus("COMPLETED");
+            trip.setPassengerComment("Trip completed successfully");
+            trip.setUpdateDateTime(new Date());
+            tripRepository.save(trip);
+
+            return new ResponseMessage(HttpStatus.OK.value(), "Trip completed successfully.");
     }
 
     public String generateEmailBody(Trip trip) {

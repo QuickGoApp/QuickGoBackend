@@ -1,7 +1,7 @@
 package com.QuickGo.backend.service.impl;
 
-import com.QuickGo.backend.DTO.PrivilegeDTO;
-import com.QuickGo.backend.DTO.common.ResponseMessage;
+import com.QuickGo.backend.dto.PrivilegeDTO;
+import com.QuickGo.backend.dto.common.ResponseMessage;
 import com.QuickGo.backend.exception.CustomException;
 import com.QuickGo.backend.models.Privilege;
 import com.QuickGo.backend.models.PrivilegeDetails;
@@ -17,10 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class PrivilegeServiceImpl implements PrivilegeService {

@@ -1,25 +1,20 @@
 package com.QuickGo.backend.controllers;
 
-import com.QuickGo.backend.DTO.*;
-import com.QuickGo.backend.DTO.common.ResponseMessage;
+import com.QuickGo.backend.dto.*;
+import com.QuickGo.backend.dto.common.ResponseMessage;
 import com.QuickGo.backend.Util.IdGenerationUtil;
 import com.QuickGo.backend.models.Privilege;
 import com.QuickGo.backend.models.Role;
 import com.QuickGo.backend.models.User;
-import com.QuickGo.backend.models.Vehicle;
 import com.QuickGo.backend.models.enums.ERole;
 import com.QuickGo.backend.repository.PrivilegeDetailRepository;
 import com.QuickGo.backend.repository.RoleRepository;
 import com.QuickGo.backend.repository.UserRepository;
-import com.QuickGo.backend.repository.VehicleRepository;
 import com.QuickGo.backend.security.jwt.JwtUtils;
 import com.QuickGo.backend.security.services.UserDetailsImpl;
-import com.google.gson.Gson;
-import io.jsonwebtoken.io.Decoders;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,7 +25,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Driver;
 import java.util.*;
 import java.util.stream.Collectors;
 
