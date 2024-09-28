@@ -59,7 +59,7 @@ public class User {
     private int isActive;
 
     @OneToOne(mappedBy = "user")
-    @JoinColumn(name = "vehicle_d", referencedColumnName = "vehicle_id")
+    @JoinColumn(name = "vehicle_d", referencedColumnName = "vehicleid")
     private Vehicle vehicle;
 
     public User() {
@@ -69,14 +69,6 @@ public class User {
         this.username = username;
         this.email = email;
         this.password = password;
-    }
-
-    public Vehicle getVehicle() {
-        return vehicle;
-    }
-
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
     }
 
 }

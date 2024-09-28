@@ -11,7 +11,7 @@ import java.util.List;
 
 
 public interface VehicleService {
-    ResponseEntity<List<VehicleDTO>> getVehicles()throws Exception;
+    List<VehicleDTO> findAll();
 
     ResponseMessage saveVehicle(VehicleDTO vehicleDTO);
 

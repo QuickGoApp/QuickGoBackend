@@ -25,29 +25,25 @@ public class VehicleServiceImpl implements VehicleService {
     private UserRepository userRepository;
 
     @Override
-    public ResponseEntity<List<VehicleDTO>> getVehicles() throws Exception {
-        List<User> usersWithVehicle = userRepository.findByVehicleIsNotNull();
-        List<VehicleDTO> vehicleDTOs = new ArrayList<>();
+    public List<VehicleDTO> findAll() {
+        return vehicleRepository.findAll().stream()
+                .map(this::toVehicleDTO)
+                .toList();
+    }
 
-        for (User user : usersWithVehicle) {
-            VehicleDTO vehicleDTO = new VehicleDTO();
-            Vehicle vehicle = vehicleRepository.findById((int) user.getVehicle().getVehicleid()).orElse(null);
-
-            if (vehicle != null) {
-                vehicleDTO.setId(vehicle.getVehicleid());
-                vehicleDTO.setVehicle_name(vehicle.getVehicleName());
-                vehicleDTO.setVehicle_number(vehicle.getVehicleNumber());
-                vehicleDTO.setType(vehicle.getType());
-                vehicleDTO.setColor(vehicle.getColor());
-                vehicleDTO.setVehicle_conditions(vehicle.getVehicleConditions());
-                vehicleDTO.setSeats(vehicle.getSeats());
-                String status = (vehicle.getIsActive() == 1) ? "Available" : "Not Available";
-                vehicleDTO.setIsActive(status);
-                vehicleDTO.setSelectedDriverName(user.getName());
-                vehicleDTOs.add(vehicleDTO);
-            }
-        }
-        return ResponseEntity.ok(vehicleDTOs);
+    private VehicleDTO toVehicleDTO(Vehicle vehicle) {
+        VehicleDTO vehicleDTO = new VehicleDTO();
+        vehicleDTO.setId(vehicle.getVehicleid());
+        vehicleDTO.setVehicle_name(vehicle.getVehicleName());
+        vehicleDTO.setVehicle_number(vehicle.getVehicleNumber());
+        vehicleDTO.setType(vehicle.getType());
+        vehicleDTO.setColor(vehicle.getColor());
+        vehicleDTO.setVehicle_conditions(vehicle.getVehicleConditions());
+        vehicleDTO.setSeats(vehicle.getSeats());
+        String status = (vehicle.getIsActive() == 1) ? "Available" : "Not Available";
+        vehicleDTO.setIsActive(status);
+        vehicleDTO.setSelectedDriverName(vehicle.getUser().getName());
+        return vehicleDTO;
     }
 
     @Override

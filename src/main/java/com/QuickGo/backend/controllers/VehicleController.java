@@ -1,6 +1,7 @@
 package com.QuickGo.backend.controllers;
 
 import com.QuickGo.backend.dto.VehicleDTO;
+import com.QuickGo.backend.dto.common.ResponseMessage;
 import com.QuickGo.backend.exception.CustomException;
 import com.QuickGo.backend.models.Vehicle;
 import com.QuickGo.backend.service.VehicleService;
@@ -9,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -25,15 +24,16 @@ public class VehicleController {
         return ResponseEntity.ok(vehicleService.saveVehicle(vehicleDTO));
     }
 
-    @GetMapping("/vehicles")
-    public ResponseEntity<List<VehicleDTO>> getVehicles() throws CustomException {
-        try {
-            return vehicleService.getVehicles();
-        } catch (CustomException e) {
-            throw new CustomException(e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+    @GetMapping("/all")
+    public ResponseEntity<ResponseMessage> findAll() {
+        return ResponseEntity.ok(
+                new ResponseMessage(
+                        200,
+                        "Success",
+                        vehicleService.findAll()
+                )
+        );
+
     }
 
     @PutMapping("/updateVehicle/{id}")
