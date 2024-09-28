@@ -1,9 +1,8 @@
 package com.QuickGo.backend.service.impl;
 
 import com.QuickGo.backend.Util.UtilService;
-import com.QuickGo.backend.dto.report.TripReportDto;
 import com.QuickGo.backend.dto.report.ReportRequestDto;
-import com.QuickGo.backend.dto.report.RequestCancellationReportDto;
+import com.QuickGo.backend.dto.report.TripReportDto;
 import com.QuickGo.backend.models.Trip;
 import com.QuickGo.backend.repository.TripRepository;
 import com.QuickGo.backend.service.ReportService;
