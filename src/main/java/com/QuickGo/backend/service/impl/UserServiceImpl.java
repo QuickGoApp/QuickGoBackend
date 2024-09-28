@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<GeoLocationDriverDTO> findByUserCodes(List<DriverCoordinateDto> request) {
         List<String> userCodes = request.stream()
-                .map(DriverCoordinateDto::getDriverCode)
+                .map(DriverCoordinateDto::getDriverId)
                 .toList();
         return userRepository.findByUserCodeIn(userCodes)
                 .stream()
@@ -31,13 +31,13 @@ public class UserServiceImpl implements UserService {
 
     private GeoLocationDriverDTO toGeoLocationDriverDTO(User driver, List<DriverCoordinateDto> request) {
         DriverCoordinateDto driverCoordinateDto = request.stream()
-                .filter(x -> x.getDriverCode().equals(driver.getUserCode()))
+                .filter(x -> x.getDriverId().equals(driver.getUserCode()))
                 .findFirst()
                 .orElseThrow();
         return GeoLocationDriverDTO.builder()
                 .coordinates(CoordinatesDTO.builder()
-                        .lat(driverCoordinateDto.getLat())
-                        .lng(driverCoordinateDto.getLng())
+                        .lat(driverCoordinateDto.getLatitude())
+                        .lng(driverCoordinateDto.getLongitude())
                         .build())
                 .name(driver.getName())
                 .type(driver.getVehicle().getType())
@@ -45,11 +45,11 @@ public class UserServiceImpl implements UserService {
                 .image(driver.getVehicle().getImage())
                 .vehicleNumber(driver.getVehicle().getVehicleNumber())
                 .color(driver.getVehicle().getColor())
-//                .rate(driver.getVehicle().getRate())
+                .rate(driver.getOverallRating())
                 .seats(driver.getVehicle().getSeats())
-//                .isFavorite(driver.isFavorite())
+                .isFavorite(true)
                 .userCode(driver.getUserCode())
-//                .favoriteID(driver.getFavoriteID())
+                .favoriteID(1)
                 .build();
     }
 

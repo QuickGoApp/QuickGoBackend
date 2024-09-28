@@ -53,13 +53,9 @@ public class TripServiceImpl implements TripService {
             throw new CustomException("Drop location must have valid coordinates.");
         }
         List<Trip> passengerRequests = tripRepository.findTripByPassengerCodeAndStatus(requestDetailDTO.getPassengerCode(), "REQUEST");
-        if (passengerRequests.size() > 1)
+        if (!passengerRequests.isEmpty())
             return new ResponseEntity<>(new ResponseMessage(HttpStatus.TOO_MANY_REQUESTS.value(), "You have already requested a driver"), HttpStatus.OK);
 
-        passengerRequests.stream()
-                .filter(passengerRequest -> passengerRequest.getDriveCode().equals(requestDetailDTO.getDriveCode()))
-                .findFirst()
-                .ifPresent(trip -> new ResponseEntity<>(new ResponseMessage(HttpStatus.TOO_MANY_REQUESTS.value(), "You have already requested this driver"), HttpStatus.OK));
 
         // Map DTO to entity
         Trip trip = modelMapper.map(requestDetailDTO, Trip.class);
