@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @RequiredArgsConstructor
@@ -19,6 +21,7 @@ public class UserDTO {
     private String role_id;
     private String role_name;
     private String role;
+    private List<String> roles;
     private String is_active;
 
     public UserDTO(Long id, String name, String user_code, String address, String email, String mobile_num, String username, String password, String role_id, String role_name, String is_active) {

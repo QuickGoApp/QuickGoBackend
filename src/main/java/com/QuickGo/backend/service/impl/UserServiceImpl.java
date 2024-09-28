@@ -4,6 +4,7 @@ import com.QuickGo.backend.dto.CoordinatesDTO;
 import com.QuickGo.backend.dto.DriverCoordinateDto;
 import com.QuickGo.backend.dto.GeoLocationDriverDTO;
 import com.QuickGo.backend.dto.UserDTO;
+import com.QuickGo.backend.dto.common.ResponseMessage;
 import com.QuickGo.backend.models.Role;
 import com.QuickGo.backend.models.User;
 import com.QuickGo.backend.models.enums.ERole;
@@ -11,10 +12,9 @@ import com.QuickGo.backend.repository.RoleRepository;
 import com.QuickGo.backend.repository.UserRepository;
 import com.QuickGo.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -55,6 +55,22 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll().stream()
                 .map(this::toUserDto)
                 .toList();
+    }
+
+    @Override
+    public ResponseMessage update(Long id, UserDTO userData) {
+        return userRepository.findById(id)
+                .map(x -> {
+                    x.setName(userData.getName());
+                    x.setUserCode(userData.getUser_code());
+                    x.setAddress(userData.getAddress());
+                    x.setEmail(userData.getEmail());
+                    x.setMobileNum(userData.getMobile_num());
+                    x.setUsername(userData.getUsername());
+                    userRepository.save(x);
+                    return new ResponseMessage(HttpStatus.OK.value(), "User updated successfully", null);
+                })
+                .orElse(new ResponseMessage(HttpStatus.NOT_FOUND.value(), "User not found", null));
     }
 
     private UserDTO toUserDto(User user) {

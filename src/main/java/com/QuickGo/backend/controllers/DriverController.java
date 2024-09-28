@@ -36,17 +36,7 @@ public class DriverController {
 
     }
 
-    @PutMapping("/updateDriver/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody UserDTO userData) throws CustomException {
-        try {
-            return driverService.updateDriver(id, userData);
-        } catch (CustomException e) {
-            throw new CustomException(e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
 
-    }
 
     @DeleteMapping("/deleteDriver/{id}")
     public ResponseEntity<Void> deleteDriver(@PathVariable Long id) throws CustomException {

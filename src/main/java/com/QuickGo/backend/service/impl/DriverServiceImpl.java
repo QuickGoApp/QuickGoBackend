@@ -21,30 +21,7 @@ public class DriverServiceImpl implements DriverService {
     @Autowired
     private UserService userService;
 
-    @Override
-    public ResponseEntity<User> updateDriver(Long id, UserDTO userData) throws Exception {
-        Optional<User> existUser = userRepository.findById(id);
 
-        if (existUser.isPresent()) {
-            User user = existUser.get();
-            // Update user details
-            user.setName(userData.getName());
-            user.setUserCode(userData.getUser_code());
-            user.setAddress(userData.getAddress());
-            user.setEmail(userData.getEmail());
-            user.setMobileNum(userData.getMobile_num());
-            user.setUsername(userData.getUsername());
-
-
-            User updatedUser = userRepository.save(user);
-
-            // Return response with updated user details
-            return ResponseEntity.ok(updatedUser);
-        } else {
-            // Return 404 Not Found if user is not available
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-    }
 
     @Override
     public ResponseEntity<Void> deleteDriver(Long id) throws Exception {
