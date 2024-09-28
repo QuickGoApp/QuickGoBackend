@@ -1,8 +1,7 @@
-package com.QuickGo.backend.dto;
+package com.QuickGo.backend.dto.report;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.SecondaryRow;
 
 import java.util.Date;
 
