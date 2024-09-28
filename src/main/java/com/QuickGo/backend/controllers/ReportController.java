@@ -13,21 +13,35 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/quickGo/location")
+@RequestMapping(value = "/api/v1/quickGo/report")
 public class ReportController {
 
     @Autowired
     private ReportService reportService;
 
-    @GetMapping("/drivers")
-    public ResponseEntity<ResponseMessage> getDrivers(@RequestBody ReportRequestDto request) throws CustomException {
+    @GetMapping("/admin/trip")
+    public ResponseEntity<ResponseMessage> getTripReport(@RequestBody ReportRequestDto request) throws CustomException {
         return ResponseEntity.ok(
                 new ResponseMessage(
                         HttpStatus.OK.value(),
                         "Success",
-                        reportService.getPaymentReport(request)
+                        reportService.getTripReport(request)
                 )
         );
     }
+
+    @GetMapping("/admin/requestCancellation")
+    public ResponseEntity<ResponseMessage> getRequestCancellationReport(@RequestBody ReportRequestDto request) throws CustomException {
+        return ResponseEntity.ok(
+                new ResponseMessage(
+                        HttpStatus.OK.value(),
+                        "Success",
+                        reportService.getRequestCancellationReport(request)
+                )
+        );
+    }
+
+
+
 
 }
