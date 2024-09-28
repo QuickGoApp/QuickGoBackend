@@ -29,4 +29,8 @@ public class UtilService {
     }
 
 
+    public int getDaysBetween(Date fromDate, Date toDate) {
+        long diff = toDate.getTime() - fromDate.getTime();
+        return (int) (diff / (24 * 60 * 60 * 1000));
+    }
 }
