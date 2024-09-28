@@ -62,7 +62,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(id)
                 .map(x -> {
                     x.setName(userData.getName());
-                    x.setUserCode(userData.getUser_code());
                     x.setAddress(userData.getAddress());
                     x.setEmail(userData.getEmail());
                     x.setMobileNum(userData.getMobile_num());

@@ -21,8 +21,6 @@ public class DriverServiceImpl implements DriverService {
     @Autowired
     private UserService userService;
 
-
-
     @Override
     public ResponseEntity<Void> deleteDriver(Long id) throws Exception {
         Optional<User> userOptional = userRepository.findById(id);
