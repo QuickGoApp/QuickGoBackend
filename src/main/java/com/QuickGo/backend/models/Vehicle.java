@@ -1,6 +1,5 @@
 package com.QuickGo.backend.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +17,7 @@ public class Vehicle {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int vehicleid;
 
-    @Column(name = "rating",columnDefinition = "integer default 0")
+    @Column(name = "rating", columnDefinition = "integer default 0")
     private int rating;
 
     @Column(name = "create_date_time")
@@ -60,10 +59,4 @@ public class Vehicle {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    public Vehicle(){
-
-    }
-
-    public void setUser(Long selectedDriver) {
-    }
 }
