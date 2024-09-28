@@ -69,7 +69,7 @@ public class VehicleServiceImpl implements VehicleService {
 
                     return new ResponseMessage(HttpStatus.OK.value(), "Saved vehicle successfully!");
                 })
-                .orElse(new ResponseMessage(HttpStatus.NOT_FOUND.value(), "Driver not found!"));
+                .orElse(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), "Driver not found!"));
     }
 
     @Override
