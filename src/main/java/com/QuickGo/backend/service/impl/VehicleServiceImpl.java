@@ -54,6 +54,11 @@ public class VehicleServiceImpl implements VehicleService {
     public ResponseMessage saveVehicle(VehicleDTO vehicleDTO) {
         return userRepository.findById(vehicleDTO.getSelectedDriver())
                 .map(user -> {
+
+                    if (user.getVehicle() != null) {
+                        return new ResponseMessage(HttpStatus.BAD_REQUEST.value(), "Driver already has a vehicle!");
+                    }
+
                     Vehicle vehicle = new Vehicle();
                     vehicle.setVehicleName(vehicleDTO.getVehicle_name());
                     vehicle.setVehicleNumber(vehicleDTO.getVehicle_number());
