@@ -2,6 +2,7 @@ package com.QuickGo.backend.controllers;
 
 import com.QuickGo.backend.DTO.DriverCoordinateDto;
 import com.QuickGo.backend.DTO.GeoLocationDriverDTO;
+import com.QuickGo.backend.DTO.common.ResponseMessage;
 import com.QuickGo.backend.service.UserService;
 import com.QuickGo.backend.DTO.UserDTO;
 import com.QuickGo.backend.exception.CustomException;
@@ -9,6 +10,7 @@ import com.QuickGo.backend.models.User;
 import com.QuickGo.backend.service.DriverService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,8 +59,14 @@ public class DriverController {
         }
     }
 
-    @PostMapping(value = "/by/userCodes")
-    public ResponseEntity<List<GeoLocationDriverDTO>> findByUserCodes(@RequestBody List<DriverCoordinateDto> userCodes) {
-        return ResponseEntity.ok(userService.findByUserCodes(userCodes));
+    @PostMapping(value = "/getGeolocationDrivers")
+    public ResponseEntity<ResponseMessage> findByUserCodes(@RequestBody List<DriverCoordinateDto> userCodes) {
+        return ResponseEntity.ok(
+                new ResponseMessage(
+                        HttpStatus.OK.value(),
+                        "success",
+                        userService.findByUserCodes(userCodes)
+                )
+        );
     }
 }
