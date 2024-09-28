@@ -230,6 +230,11 @@ public class TripServiceImpl implements TripService {
             }
 
             Trip trip = passengerRequests.get(0);
+
+            if (!"ACCEPTED".equals(trip.getStatus())) {
+                return new ResponseMessage(HttpStatus.BAD_REQUEST.value(), "You have not accepted any trip request.");
+            }
+
             trip.setStatus("COMPLETED");
             trip.setPassengerComment("Trip completed successfully");
             trip.setUpdateDateTime(new Date());

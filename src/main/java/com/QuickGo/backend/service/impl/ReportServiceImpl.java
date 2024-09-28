@@ -21,7 +21,7 @@ public class ReportServiceImpl implements ReportService {
     private TripRepository tripRepository;
 
     @Override
-    public List<PaymentReportDto> paymentReport(ReportRequestDto request) {
+    public List<PaymentReportDto> getPaymentReport(ReportRequestDto request) {
         validateReportRequest(request);
         Date fromDate = utilService.getStartOfDay(request.getFromDate());
         Date toDate = utilService.getEndOfDay(request.getToDate());
