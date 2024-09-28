@@ -79,8 +79,6 @@ public class ReportServiceImpl implements ReportService {
         if (request.getFromDate().after(request.getToDate())) {
             throw new IllegalArgumentException("Invalid date range");
         }
-
-        // date range should not be more than 100 days
         if (utilService.getDaysBetween(request.getFromDate(), request.getToDate()) > 100) {
             throw new IllegalArgumentException("Date range should not be more than 100 days");
         }
