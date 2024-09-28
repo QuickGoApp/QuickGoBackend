@@ -14,5 +14,5 @@ public interface UserService {
 
     List<UserDTO> findAllUsers();
 
-    ResponseMessage update(Long id, UserDTO userData);
+    ResponseMessage update(UserDTO userData);
 }

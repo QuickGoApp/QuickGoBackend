@@ -58,8 +58,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseMessage update(Long id, UserDTO userData) {
-        return userRepository.findById(id)
+    public ResponseMessage update(UserDTO userData) {
+        return userRepository.findById(userData.getId())
                 .map(x -> {
                     x.setName(userData.getName());
                     x.setAddress(userData.getAddress());

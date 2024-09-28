@@ -30,9 +30,9 @@ public class UserController {
         );
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<ResponseMessage> updateUser(@PathVariable Long id, @RequestBody UserDTO userData) throws CustomException {
-        return ResponseEntity.ok(userService.update(id, userData));
+    @PutMapping("/update")
+    public ResponseEntity<ResponseMessage> updateUser(@RequestBody UserDTO userData) throws CustomException {
+        return ResponseEntity.ok(userService.update(userData));
     }
 
 
