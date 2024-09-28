@@ -54,16 +54,7 @@ public class VehicleServiceImpl implements VehicleService {
                         return new ResponseMessage(HttpStatus.BAD_REQUEST.value(), "Driver already has a vehicle!");
                     }
 
-                    Vehicle vehicle = new Vehicle();
-                    vehicle.setVehicleName(vehicleDTO.getVehicle_name());
-                    vehicle.setVehicleNumber(vehicleDTO.getVehicle_number());
-                    vehicle.setType(vehicleDTO.getType());
-                    vehicle.setColor(vehicleDTO.getColor());
-                    vehicle.setVehicleConditions(vehicleDTO.getVehicle_conditions());
-                    vehicle.setSeats(vehicleDTO.getSeats());
-                    vehicle.setIsActive(1);
-                    vehicle.setCreateDateTime(new Date());
-                    vehicle.setUpdateDateTime(new Date());
+                    Vehicle vehicle = toVehicle(vehicleDTO);
                     vehicle.setUser(user);
                     vehicleRepository.save(vehicle);
 
@@ -73,6 +64,20 @@ public class VehicleServiceImpl implements VehicleService {
                     return new ResponseMessage(HttpStatus.OK.value(), "Saved vehicle successfully!");
                 })
                 .orElse(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), "Driver not found!"));
+    }
+
+    private Vehicle toVehicle(VehicleDTO vehicleDTO) {
+        Vehicle vehicle = new Vehicle();
+        vehicle.setVehicleName(vehicleDTO.getVehicle_name());
+        vehicle.setVehicleNumber(vehicleDTO.getVehicle_number());
+        vehicle.setType(vehicleDTO.getType());
+        vehicle.setColor(vehicleDTO.getColor());
+        vehicle.setVehicleConditions(vehicleDTO.getVehicle_conditions());
+        vehicle.setSeats(vehicleDTO.getSeats());
+        vehicle.setIsActive(1);
+        vehicle.setCreateDateTime(new Date());
+        vehicle.setUpdateDateTime(new Date());
+        return vehicle;
     }
 
     @Override
@@ -85,7 +90,6 @@ public class VehicleServiceImpl implements VehicleService {
                     vehicle.setColor(vehicleData.getColor());
                     vehicle.setVehicleConditions(vehicleData.getVehicle_conditions());
                     vehicle.setSeats(vehicleData.getSeats());
-                    vehicle.setUser(vehicleData.getSelectedDriver());
 
                     vehicleRepository.save(vehicle);
                     return new ResponseMessage(HttpStatus.OK.value(), "Vehicle updated successfully!");
