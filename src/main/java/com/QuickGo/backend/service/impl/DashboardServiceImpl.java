@@ -29,25 +29,13 @@ public class DashboardServiceImpl implements DashboardService {
     @Override
     public DashboardAnalyticsDto getDashboardAnalytics() {
 
-        List<Role> roles = roleRepository.findByNameIn(List.of(ERole.ROLE_DRIVER, ERole.ROLE_PASSENGER));
-        Role driverRole = roles.stream()
-                .filter(role -> role.getName().equals(ERole.ROLE_DRIVER))
-                .findFirst()
+        Role driverRole = roleRepository.findByName(ERole.ROLE_DRIVER)
                 .orElseThrow(() -> new RuntimeException("Role not found"));
-        Role passengerRole = roles.stream()
-                .filter(role -> role.getName().equals(ERole.ROLE_PASSENGER))
-                .findFirst()
+        Role passengerRole = roleRepository.findByName(ERole.ROLE_PASSENGER)
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
-        List<User> users = userRepository.findByRolesContaining(Set.copyOf(roles));
-
-        long driversCount = users.stream()
-                .filter(user -> user.getRoles().contains(driverRole))
-                .count();
-        long passengerCount = users.stream()
-                .filter(user -> user.getRoles().contains(passengerRole))
-                .count();
-
+        long driversCount = userRepository.findByRolesContains(driverRole).size();
+        long passengerCount = userRepository.findByRolesContains(passengerRole).size();
 
         List<Trip> trips = tripRepository.findAll();
         long totalActiveTrips = trips.stream()

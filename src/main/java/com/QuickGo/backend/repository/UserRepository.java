@@ -24,6 +24,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByVehicleIsNotNull();
 
-    List<User> findByRolesContaining(Set<Role> roles);
+    List<User> findByRolesContains(Role role);
 
 }
