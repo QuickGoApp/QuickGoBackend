@@ -2,7 +2,6 @@ package com.QuickGo.backend.service.impl;
 
 import com.QuickGo.backend.dto.VehicleDTO;
 import com.QuickGo.backend.dto.common.ResponseMessage;
-import com.QuickGo.backend.models.User;
 import com.QuickGo.backend.models.Vehicle;
 import com.QuickGo.backend.repository.UserRepository;
 import com.QuickGo.backend.repository.VehicleRepository;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,29 +72,22 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public ResponseEntity<Vehicle> updateVehicle(int id, VehicleDTO vehicleData) throws Exception {
-        Optional<Vehicle> existVehicle = vehicleRepository.findById((int) id);
+    public ResponseMessage updateVehicle(int id, VehicleDTO vehicleData) {
+        return vehicleRepository.findById(id)
+                .map(vehicle -> {
+                    vehicle.setVehicleName(vehicleData.getVehicle_name());
+                    vehicle.setVehicleNumber(vehicleData.getVehicle_number());
+                    vehicle.setType(vehicleData.getType());
+                    vehicle.setColor(vehicleData.getColor());
+                    vehicle.setVehicleConditions(vehicleData.getVehicle_conditions());
+                    vehicle.setSeats(vehicleData.getSeats());
+                    vehicle.setUser(vehicleData.getSelectedDriver());
 
+                    vehicleRepository.save(vehicle);
+                    return new ResponseMessage(HttpStatus.OK.value(), "Vehicle updated successfully!");
+                })
+                .orElse(new ResponseMessage(HttpStatus.BAD_REQUEST.value(), "Vehicle not found!"));
 
-        if (existVehicle.isPresent()) {
-            Vehicle vehicle = existVehicle.get();
-            // Update vehicle details
-            vehicle.setVehicleName(vehicleData.getVehicle_name());
-            vehicle.setVehicleNumber(vehicleData.getVehicle_number());
-            vehicle.setType(vehicleData.getType());
-            vehicle.setColor(vehicleData.getColor());
-            vehicle.setVehicleConditions(vehicleData.getVehicle_conditions());
-            vehicle.setSeats(vehicleData.getSeats());
-            vehicle.setUser(vehicleData.getSelectedDriver());
-
-            Vehicle updatedVehicle = vehicleRepository.save(vehicle);
-
-            // Return response with updated vehicle details
-            return ResponseEntity.ok(updatedVehicle);
-        } else {
-            // Return 404 Not Found if vehicle is not present
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
     }
 
     @Override

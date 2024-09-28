@@ -3,7 +3,6 @@ package com.QuickGo.backend.controllers;
 import com.QuickGo.backend.dto.VehicleDTO;
 import com.QuickGo.backend.dto.common.ResponseMessage;
 import com.QuickGo.backend.exception.CustomException;
-import com.QuickGo.backend.models.Vehicle;
 import com.QuickGo.backend.service.VehicleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -37,14 +36,8 @@ public class VehicleController {
     }
 
     @PutMapping("/updateVehicle/{id}")
-    public ResponseEntity<Vehicle> updateVehicle(@PathVariable int id, @RequestBody VehicleDTO vehicleData) throws CustomException {
-        try {
-            return vehicleService.updateVehicle(id, vehicleData);
-        } catch (CustomException e) {
-            throw new CustomException(e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+    public ResponseEntity<ResponseMessage> updateVehicle(@PathVariable int id, @RequestBody VehicleDTO vehicleData) {
+        return ResponseEntity.ok(vehicleService.updateVehicle(id, vehicleData));
     }
 
     @DeleteMapping("/deleteVehicle/{id}")
