@@ -50,6 +50,32 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public List<UserDTO> findAllUsers() {
+        return userRepository.findAll().stream()
+                .map(this::toUserDto)
+                .toList();
+    }
+
+    private UserDTO toUserDto(User user) {
+        Set<Role> roles = user.getRoles();
+        Role role = roles.stream().findFirst().orElseThrow();
+        return new UserDTO(
+                user.getId(),
+                user.getName(),
+                user.getUserCode(),
+                user.getAddress(),
+                user.getEmail(),
+                user.getMobileNum(),
+                user.getUsername(),
+                user.getPassword(),
+                role.getName().toString(),
+                user.getIsActive() == 1 ? "Active" : "Inactive"
+        );
+
+    }
+
+
     private UserDTO toUserDto(User user, Role role) {
         return new UserDTO(
                 user.getId(),

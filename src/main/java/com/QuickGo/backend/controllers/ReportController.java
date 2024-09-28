@@ -30,4 +30,15 @@ public class ReportController {
         );
     }
 
+    @PostMapping("/admin/driver")
+    public ResponseEntity<ResponseMessage> getDriverReport(@RequestBody ReportRequestDto request) throws CustomException {
+        return ResponseEntity.ok(
+                new ResponseMessage(
+                        HttpStatus.OK.value(),
+                        "Success",
+                        reportService.getDriverReport(request)
+                )
+        );
+    }
+
 }

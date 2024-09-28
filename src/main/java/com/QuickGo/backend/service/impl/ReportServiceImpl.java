@@ -1,6 +1,7 @@
 package com.QuickGo.backend.service.impl;
 
 import com.QuickGo.backend.Util.UtilService;
+import com.QuickGo.backend.dto.UserDTO;
 import com.QuickGo.backend.dto.report.ReportRequestDto;
 import com.QuickGo.backend.dto.report.TripReportDto;
 import com.QuickGo.backend.models.Trip;
@@ -50,6 +51,11 @@ public class ReportServiceImpl implements ReportService {
 
         return data.stream().map(this::toTripReportDto).toList();
 
+    }
+
+    @Override
+    public List<UserDTO> getDriverReport(ReportRequestDto request) {
+        return List.of();
     }
 
 
