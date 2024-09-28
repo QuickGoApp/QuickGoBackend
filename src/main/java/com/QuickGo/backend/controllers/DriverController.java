@@ -1,13 +1,12 @@
 package com.QuickGo.backend.controllers;
 
 import com.QuickGo.backend.dto.DriverCoordinateDto;
-import com.QuickGo.backend.dto.GeoLocationDriverDTO;
-import com.QuickGo.backend.dto.common.ResponseMessage;
-import com.QuickGo.backend.service.UserService;
 import com.QuickGo.backend.dto.UserDTO;
+import com.QuickGo.backend.dto.common.ResponseMessage;
 import com.QuickGo.backend.exception.CustomException;
 import com.QuickGo.backend.models.User;
 import com.QuickGo.backend.service.DriverService;
+import com.QuickGo.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,19 +20,20 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/v1/quickGo/driver")
 public class DriverController {
+    private final UserService userService;
     @Autowired
     private DriverService driverService;
-    private final UserService userService;
 
     @GetMapping("/drivers")
-    public ResponseEntity<List<UserDTO>> getDrivers() throws CustomException {
-        try {
-            return driverService.getDrivers();
-        } catch (CustomException e) {
-            throw new CustomException(e.getMessage());
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
-        }
+    public ResponseEntity<ResponseMessage> getDrivers() {
+        return ResponseEntity.ok(
+                new ResponseMessage(
+                        HttpStatus.OK.value(),
+                        "success",
+                        driverService.getDrivers()
+                )
+        );
+
     }
 
     @PutMapping("/updateDriver/{id}")

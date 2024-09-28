@@ -1,53 +1,25 @@
 package com.QuickGo.backend.service.impl;
 
 import com.QuickGo.backend.dto.UserDTO;
-import com.QuickGo.backend.models.Role;
 import com.QuickGo.backend.models.User;
+import com.QuickGo.backend.models.enums.ERole;
 import com.QuickGo.backend.repository.UserRepository;
 import com.QuickGo.backend.service.DriverService;
+import com.QuickGo.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class DriverServiceImpl implements DriverService {
     @Autowired
     private UserRepository userRepository;
-
-    @Override
-    public ResponseEntity<List<UserDTO>> getDrivers() throws Exception {
-        List<User> drivers = userRepository.findAll();
-        List<UserDTO> driverDTOs = new ArrayList<>();
-        for (User user: drivers) {
-            UserDTO userDTO = new UserDTO();
-            userDTO.setId(user.getId());
-            Set<Role> roles = user.getRoles();
-            String roleName = roles.stream()
-                    .findFirst()
-                    .map(role -> role.getName().name())  // Get the name of the ERole enum
-                    .orElse("No role assigned");
-
-            userDTO.setRole_id(roleName);
-            userDTO.setName(user.getName());
-            userDTO.setUser_code(user.getUserCode());
-            userDTO.setAddress(user.getAddress());
-            userDTO.setEmail(user.getEmail());
-            userDTO.setMobile_num(user.getMobileNum());
-            userDTO.setUsername(user.getUsername());
-            userDTO.setPassword(user.getPassword());
-            String status = (user.getIsActive() == 1) ? "Active" : "Inactive";
-            userDTO.setIs_active(status);
-            driverDTOs.add(userDTO);
-        }
-
-        return ResponseEntity.ok(driverDTOs);
-    }
+    @Autowired
+    private UserService userService;
 
     @Override
     public ResponseEntity<User> updateDriver(Long id, UserDTO userData) throws Exception {
@@ -86,5 +58,10 @@ public class DriverServiceImpl implements DriverService {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @Override
+    public List<UserDTO> getDrivers() {
+        return userService.findByUserRole(ERole.ROLE_DRIVER);
     }
 }
