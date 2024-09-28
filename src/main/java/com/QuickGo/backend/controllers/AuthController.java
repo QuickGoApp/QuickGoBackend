@@ -79,11 +79,14 @@ public class AuthController {
                     .collect(Collectors.toList());
         }
         String userCode = null;
+        String vehicleType = null;
         Optional<User> byId = userRepository.findById(userDetails.getId());
         if (byId.isPresent()) {
             userCode = byId.get().getUserCode();
+            if(byId.get().getVehicle()!=null)
+                vehicleType= byId.get().getVehicle().getType();
         }
-        return ResponseEntity.ok(new JwtResponseDTO(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles, privileges,userCode));
+        return ResponseEntity.ok(new JwtResponseDTO(jwt, userDetails.getId(), userDetails.getUsername(), userDetails.getEmail(), roles, privileges,userCode,vehicleType));
     }
 
     @PostMapping("/signup")
