@@ -2,7 +2,6 @@ package com.QuickGo.backend.controllers;
 
 import com.QuickGo.backend.dto.UserDTO;
 import com.QuickGo.backend.dto.common.ResponseMessage;
-import com.QuickGo.backend.exception.CustomException;
 import com.QuickGo.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,7 @@ public class UserController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<ResponseMessage> updateUser(@RequestBody UserDTO userData) throws CustomException {
+    public ResponseEntity<ResponseMessage> updateUser(@RequestBody UserDTO userData) {
         return ResponseEntity.ok(userService.update(userData));
     }
 
