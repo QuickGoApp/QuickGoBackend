@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface ReportService {
 
-    List<PaymentReportDto> paymentReport(ReportRequestDto request);
+    List<PaymentReportDto> getPaymentReport(ReportRequestDto request);
 
 }
