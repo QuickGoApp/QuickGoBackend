@@ -17,7 +17,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/quickGo/auth/vehicle")
+@RequestMapping(value = "/api/v1/quickGo/vehicle")
 public class VehicleController {
     @Autowired
     private VehicleService vehicleService;
