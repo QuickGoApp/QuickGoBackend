@@ -72,6 +72,8 @@ public class VehicleServiceImpl implements VehicleService {
         vehicle.setVehicleNumber(vehicleDTO.getVehicle_number());
         vehicle.setType(vehicleDTO.getType());
         vehicle.setColor(vehicleDTO.getColor());
+        vehicle.setIcon(vehicleDTO.getIcon());
+        vehicle.setImage(vehicleDTO.getImage());
         vehicle.setVehicleConditions(vehicleDTO.getVehicle_conditions());
         vehicle.setSeats(vehicleDTO.getSeats());
         vehicle.setIsActive(1);
