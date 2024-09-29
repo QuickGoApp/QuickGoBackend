@@ -1,11 +1,16 @@
 package com.QuickGo.backend.service.impl;
 
 import com.QuickGo.backend.Util.UtilService;
-import com.QuickGo.backend.dto.UserDTO;
+import com.QuickGo.backend.dto.report.DriverReportDto;
 import com.QuickGo.backend.dto.report.ReportRequestDto;
 import com.QuickGo.backend.dto.report.TripReportDto;
+import com.QuickGo.backend.models.Role;
 import com.QuickGo.backend.models.Trip;
+import com.QuickGo.backend.models.User;
+import com.QuickGo.backend.models.enums.ERole;
+import com.QuickGo.backend.repository.RoleRepository;
 import com.QuickGo.backend.repository.TripRepository;
+import com.QuickGo.backend.repository.UserRepository;
 import com.QuickGo.backend.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +25,10 @@ public class ReportServiceImpl implements ReportService {
     private UtilService utilService;
     @Autowired
     private TripRepository tripRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public List<TripReportDto> getTripReport(ReportRequestDto request) {
@@ -54,8 +63,45 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public List<UserDTO> getDriverReport(ReportRequestDto request) {
-        return List.of();
+    public List<DriverReportDto> getDriverReport(ReportRequestDto request) {
+        validateDriverReportRequest(request);
+        Role role = roleRepository.findByName(ERole.ROLE_DRIVER)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        Date fromDate = utilService.getStartOfDay(request.getFromDate());
+        Date toDate = utilService.getEndOfDay(request.getToDate());
+
+        return userRepository.findByCreateDateTimeBetweenAndRolesContains(fromDate, toDate, role)
+                .stream()
+                .map(this::toDriverReportDto)
+                .toList();
+
+    }
+
+    private DriverReportDto toDriverReportDto(User user) {
+        return new DriverReportDto(
+                user.getUserCode(),
+                user.getName(),
+                user.getMobileNum(),
+                user.getCreateDateTime(),
+                user.getOverallRating(),
+                user.getVehicle() != null ? user.getVehicle().getVehicleName() : null,
+                user.getVehicle() != null ? user.getVehicle().getVehicleNumber() : null,
+                user.getVehicle() != null ? user.getVehicle().getType() : null,
+                user.getVehicle() != null ? user.getVehicle().getColor() : null
+        );
+    }
+
+    private void validateDriverReportRequest(ReportRequestDto request) {
+        if (request.getFromDate() == null || request.getToDate() == null) {
+            throw new IllegalArgumentException("Date range is required");
+        }
+        if (request.getFromDate().after(request.getToDate())) {
+            throw new IllegalArgumentException("Invalid date range");
+        }
+        if (utilService.getDaysBetween(request.getFromDate(), request.getToDate()) > 100) {
+            throw new IllegalArgumentException("Date range should not be more than 100 days");
+        }
     }
 
 
