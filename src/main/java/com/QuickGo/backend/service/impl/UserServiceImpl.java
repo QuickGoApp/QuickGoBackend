@@ -73,14 +73,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseMessage findByCode(String userCode) {
-        return new ResponseMessage(
-                HttpStatus.OK.value(),
-                "Success",
-                userRepository.findByUserCode(userCode)
-                        .map(this::toUserDto)
-                        .orElse(null)
-        );
+    public UserDTO findByCode(String userCode) {
+        return userRepository.findByUserCode(userCode)
+                .map(this::toUserDto)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
 

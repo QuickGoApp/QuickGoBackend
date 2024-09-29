@@ -16,5 +16,5 @@ public interface UserService {
 
     ResponseMessage update(UserDTO userData);
 
-    ResponseMessage findByCode(String userCode);
+    UserDTO findByCode(String userCode);
 }
