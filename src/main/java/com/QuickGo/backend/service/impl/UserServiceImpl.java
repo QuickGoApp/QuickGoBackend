@@ -1,5 +1,6 @@
 package com.QuickGo.backend.service.impl;
 
+import com.QuickGo.backend.controllers.UserController;
 import com.QuickGo.backend.dto.CoordinatesDTO;
 import com.QuickGo.backend.dto.DriverCoordinateDto;
 import com.QuickGo.backend.dto.GeoLocationDriverDTO;
@@ -13,6 +14,7 @@ import com.QuickGo.backend.repository.UserRepository;
 import com.QuickGo.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +27,9 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    PasswordEncoder encoder;
 
     @Override
     public List<GeoLocationDriverDTO> findByUserCodes(List<DriverCoordinateDto> request) {
@@ -66,6 +71,9 @@ public class UserServiceImpl implements UserService {
                     x.setEmail(userData.getEmail());
                     x.setMobileNum(userData.getMobile_num());
                     x.setUsername(userData.getUsername());
+                    if(!userData.getPassword().isEmpty()){
+                        x.setPassword(encoder.encode(userData.getPassword()));
+                    }
                     userRepository.save(x);
                     return new ResponseMessage(HttpStatus.OK.value(), "User updated successfully", null);
                 })

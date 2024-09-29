@@ -1,7 +1,10 @@
 package com.QuickGo.backend.dto;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class VehicleDTO {
     private int id;
     private String vehicle_name;

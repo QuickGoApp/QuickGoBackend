@@ -29,13 +29,13 @@ public class UserController {
         );
     }
 
-    @GetMapping("/by/code")
-    public ResponseEntity<ResponseMessage> findByCode(@RequestBody String userCode) {
+    @PostMapping("/by/code")
+    public ResponseEntity<ResponseMessage> findByCode(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(
                 new ResponseMessage(
                         HttpStatus.OK.value(),
                         "Success",
-                        userService.findByCode(userCode)
+                        userService.findByCode(userDTO.getUser_code())
                 )
         );
     }
