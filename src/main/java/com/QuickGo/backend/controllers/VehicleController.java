@@ -19,7 +19,7 @@ public class VehicleController {
     private VehicleService vehicleService;
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveVehicle(@Valid @RequestBody VehicleDTO vehicleDTO) {
+    public ResponseEntity<?> saveVehicle(@RequestBody VehicleDTO vehicleDTO) {
         return ResponseEntity.ok(vehicleService.saveVehicle(vehicleDTO));
     }
 
