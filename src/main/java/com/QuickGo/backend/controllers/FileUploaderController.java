@@ -18,7 +18,7 @@ public class FileUploaderController {
     @Autowired
     private FileUploaderService fileUploaderService;
 
-    @PostMapping()
+    @PostMapping("/upload")
     public ResponseEntity<ResponseMessage> uploadImage(@RequestParam("image") MultipartFile file) {
         return ResponseEntity.ok(
                 new ResponseMessage(

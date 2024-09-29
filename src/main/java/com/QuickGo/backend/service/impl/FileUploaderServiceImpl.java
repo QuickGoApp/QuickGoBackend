@@ -39,7 +39,7 @@ public class FileUploaderServiceImpl implements FileUploaderService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Failed to upload file : " + e.getMessage());
         }
 
-        return uploadDir + "/" + filename;
+        return "assets/img/vehicle/" + filename;
     }
 
     @Override
