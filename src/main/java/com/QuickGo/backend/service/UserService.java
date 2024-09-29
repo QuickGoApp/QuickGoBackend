@@ -15,4 +15,6 @@ public interface UserService {
     List<UserDTO> findAllUsers();
 
     ResponseMessage update(UserDTO userData);
+
+    ResponseMessage findByCode(String userCode);
 }

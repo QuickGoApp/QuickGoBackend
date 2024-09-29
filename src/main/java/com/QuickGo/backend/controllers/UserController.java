@@ -29,6 +29,17 @@ public class UserController {
         );
     }
 
+    @GetMapping("/by/code")
+    public ResponseEntity<ResponseMessage> findByCode(@RequestBody String userCode) {
+        return ResponseEntity.ok(
+                new ResponseMessage(
+                        HttpStatus.OK.value(),
+                        "Success",
+                        userService.findByCode(userCode)
+                )
+        );
+    }
+
     @PutMapping("/update")
     public ResponseEntity<ResponseMessage> updateUser(@RequestBody UserDTO userData) {
         return ResponseEntity.ok(userService.update(userData));

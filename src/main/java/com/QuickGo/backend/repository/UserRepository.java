@@ -3,6 +3,7 @@ package com.QuickGo.backend.repository;
 
 import com.QuickGo.backend.models.Role;
 import com.QuickGo.backend.models.User;
+import org.antlr.v4.runtime.misc.MultiMap;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -26,4 +27,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findByRolesContains(Role role);
 
+    Optional<User> findByUserCode(String userCode);
 }

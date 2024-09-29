@@ -72,9 +72,22 @@ public class UserServiceImpl implements UserService {
                 .orElse(new ResponseMessage(HttpStatus.NOT_FOUND.value(), "User not found", null));
     }
 
+    @Override
+    public ResponseMessage findByCode(String userCode) {
+        return new ResponseMessage(
+                HttpStatus.OK.value(),
+                "Success",
+                userRepository.findByUserCode(userCode)
+                        .map(this::toUserDto)
+                        .orElse(null)
+        );
+    }
+
+
     private UserDTO toUserDto(User user) {
         Set<Role> roles = user.getRoles();
         Role role = roles.stream().findFirst().orElseThrow();
+
         return new UserDTO(
                 user.getId(),
                 user.getName(),
@@ -84,6 +97,7 @@ public class UserServiceImpl implements UserService {
                 user.getMobileNum(),
                 user.getUsername(),
                 user.getPassword(),
+                user.getOverallRating(),
                 role.getName().toString(),
                 user.getIsActive() == 1 ? "Active" : "Inactive"
         );

@@ -20,6 +20,8 @@ public class UserDTO {
     private String password;
     private String role_id;
     private String role_name;
+    private int overallRating;
+
     private List<String> role;
     private String is_active;
 
@@ -38,7 +40,7 @@ public class UserDTO {
     }
 
 
-    public UserDTO(Long id, String name, String user_code, String address, String email, String mobile_num, String username, String password, String role_name, String is_active) {
+    public UserDTO(Long id, String name, String user_code, String address, String email, String mobile_num, String username, String password, int overallRating, String role_name, String is_active) {
         this.id = id;
         this.name = name;
         this.user_code = user_code;
@@ -47,6 +49,7 @@ public class UserDTO {
         this.mobile_num = mobile_num;
         this.username = username;
         this.password = password;
+        this.overallRating = overallRating;
         this.role_name = role_name;
         this.is_active = is_active;
     }
