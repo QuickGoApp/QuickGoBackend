@@ -173,6 +173,26 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    public ResponseMessage driverCancelTripRequest(TripRequestDetailDTO requestDetailDTO) {
+        if (requestDetailDTO.getPassengerCode() == null || requestDetailDTO.getPassengerCode().isEmpty()) {
+            return new ResponseMessage(HttpStatus.BAD_REQUEST.value(), "Passenger code cannot be empty.");
+        }
+
+        List<Trip> passengerRequests = tripRepository.findTripByPassengerCodeAndDriveCodeAndStatus(requestDetailDTO.getPassengerCode(), requestDetailDTO.getDriveCode(), "REQUEST");
+        if (passengerRequests.isEmpty()) {
+            return new ResponseMessage(HttpStatus.NOT_FOUND.value(), "You have not requested any passenger.");
+        }
+
+        Trip trip = passengerRequests.get(0);
+        trip.setStatus("CANCELLED");
+        trip.setPassengerComment("Trip request cancelled by driver");
+        trip.setUpdateDateTime(new Date());
+        tripRepository.save(trip);
+
+        return new ResponseMessage(HttpStatus.OK.value(), "Trip request cancelled successfully.");
+    }
+
+    @Override
     public ResponseMessage acceptTripRequest(TripRequestDetailDTO requestDetailDTO) throws CustomException {
 
         if (requestDetailDTO.getPassengerCode() == null || requestDetailDTO.getPassengerCode().isEmpty()) {

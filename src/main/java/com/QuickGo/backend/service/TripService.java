@@ -14,6 +14,8 @@ public interface TripService {
 
     ResponseMessage cancelTripRequest(TripRequestDetailDTO requestDetailDTO);
 
+    ResponseMessage driverCancelTripRequest(TripRequestDetailDTO requestDetailDTO);
+
     ResponseMessage acceptTripRequest(TripRequestDetailDTO requestDetailDTO) throws Exception;
 
     ResponseMessage endTripRequest(TripRequestDetailDTO requestDetailDTO);
