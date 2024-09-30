@@ -108,9 +108,9 @@ public class ReportServiceImpl implements ReportService {
     private TripReportDto toTripReportDto(Trip trip) {
         return new TripReportDto(
                 trip.getDriveCode(),
-                trip.getDriver().getUserCode(),
+                trip.getDriver().getName(),
                 trip.getPassengerCode(),
-                trip.getPassenger().getUserCode(),
+                trip.getPassenger().getName(),
                 trip.getCreateDateTime(),
                 trip.getTotalAmount(),
                 trip.getStatus()

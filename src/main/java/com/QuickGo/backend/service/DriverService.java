@@ -11,4 +11,5 @@ import java.util.List;
 public interface DriverService {
     ResponseEntity<Void> deleteDriver(@PathVariable Long id)throws Exception;
     List<UserDTO> getDrivers();
+    List<UserDTO> getIdleDrivers();
 }

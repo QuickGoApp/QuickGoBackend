@@ -2,6 +2,7 @@ package com.QuickGo.backend.controllers;
 
 import com.QuickGo.backend.dto.UserDTO;
 import com.QuickGo.backend.dto.common.ResponseMessage;
+import com.QuickGo.backend.models.enums.ERole;
 import com.QuickGo.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,17 @@ public class UserController {
                         HttpStatus.OK.value(),
                         "Success",
                         userService.findAllUsers()
+                )
+        );
+    }
+
+    @GetMapping("/passengers")
+    public ResponseEntity<ResponseMessage> findAllPassengers() {
+        return ResponseEntity.ok(
+                new ResponseMessage(
+                        HttpStatus.OK.value(),
+                        "Success",
+                        userService.findByUserRole(ERole.ROLE_PASSENGER)
                 )
         );
     }

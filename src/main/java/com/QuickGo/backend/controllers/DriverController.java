@@ -36,6 +36,18 @@ public class DriverController {
 
     }
 
+    @GetMapping("/drivers/idle")
+    public ResponseEntity<ResponseMessage> getIdleDrivers() {
+        return ResponseEntity.ok(
+                new ResponseMessage(
+                        HttpStatus.OK.value(),
+                        "success",
+                        driverService.getIdleDrivers()
+                )
+        );
+
+    }
+
 
 
     @DeleteMapping("/deleteDriver/{id}")

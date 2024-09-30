@@ -1,8 +1,10 @@
 package com.QuickGo.backend.service.impl;
 
 import com.QuickGo.backend.dto.UserDTO;
+import com.QuickGo.backend.models.Role;
 import com.QuickGo.backend.models.User;
 import com.QuickGo.backend.models.enums.ERole;
+import com.QuickGo.backend.repository.RoleRepository;
 import com.QuickGo.backend.repository.UserRepository;
 import com.QuickGo.backend.service.DriverService;
 import com.QuickGo.backend.service.UserService;
@@ -18,6 +20,8 @@ import java.util.Optional;
 public class DriverServiceImpl implements DriverService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
     @Autowired
     private UserService userService;
 
@@ -38,5 +42,34 @@ public class DriverServiceImpl implements DriverService {
     @Override
     public List<UserDTO> getDrivers() {
         return userService.findByUserRole(ERole.ROLE_DRIVER);
+    }
+
+    @Override
+    public List<UserDTO> getIdleDrivers() {
+        Role role = roleRepository.findByName(ERole.ROLE_DRIVER)
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+        return userRepository.findByRolesContains(role).stream()
+                .filter(x -> x.getVehicle() == null)
+                .map(x -> toUserDto(x, role))
+                .toList();
+
+    }
+
+    private UserDTO toUserDto(User user, Role role) {
+        return new UserDTO(
+                user.getId(),
+                user.getName(),
+                user.getUserCode(),
+                user.getAddress(),
+                user.getEmail(),
+                user.getMobileNum(),
+                user.getUsername(),
+                user.getPassword(),
+                role.getName().toString(),
+                role.getName().toString(),
+                user.getIsActive() == 1 ? "Active" : "Inactive"
+        );
+
     }
 }

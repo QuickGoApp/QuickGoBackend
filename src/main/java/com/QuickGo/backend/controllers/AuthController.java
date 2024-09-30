@@ -131,6 +131,7 @@ public class AuthController {
         user.setName(signUpRequest.getName());
         user.setAddress(signUpRequest.getAddress());
         user.setUserCode(idGenerationUtil.userCodeGenerator());
+        user.setCreateDateTime(new Date());
         user.setIsActive(1);
         userRepository.save(user);
         return ResponseEntity.ok(new ResponseMessage("User registered successfully!"));
