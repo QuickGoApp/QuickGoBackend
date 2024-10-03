@@ -57,5 +57,10 @@ public class UserController {
         return ResponseEntity.ok(userService.update(userData));
     }
 
+    @PostMapping("/otpSend")
+    public ResponseEntity<ResponseMessage> otpSend(@RequestBody UserDTO userData) throws Exception {
+        return ResponseEntity.ok(userService.otpSend(userData));
+    }
+
 
 }

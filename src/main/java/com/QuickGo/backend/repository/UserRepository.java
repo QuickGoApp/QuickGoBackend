@@ -27,5 +27,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUserCode(String userCode);
 
+    Optional<User> findByEmail(String email);
+
     List<User> findByCreateDateTimeBetweenAndRolesContains(Date fromDate, Date toDate, Role role);
 }

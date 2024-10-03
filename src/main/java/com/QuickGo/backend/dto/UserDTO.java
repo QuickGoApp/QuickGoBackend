@@ -21,6 +21,7 @@ public class UserDTO {
     private String role_id;
     private String role_name;
     private int overallRating;
+    private String otp;
 
     private List<String> role;
     private String is_active;

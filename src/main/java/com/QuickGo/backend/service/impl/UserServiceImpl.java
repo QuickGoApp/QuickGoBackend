@@ -1,23 +1,28 @@
 package com.QuickGo.backend.service.impl;
 
+import com.QuickGo.backend.Util.IdGenerationUtil;
+import com.QuickGo.backend.Util.UtilService;
 import com.QuickGo.backend.controllers.UserController;
 import com.QuickGo.backend.dto.CoordinatesDTO;
 import com.QuickGo.backend.dto.DriverCoordinateDto;
 import com.QuickGo.backend.dto.GeoLocationDriverDTO;
 import com.QuickGo.backend.dto.UserDTO;
 import com.QuickGo.backend.dto.common.ResponseMessage;
+import com.QuickGo.backend.exception.CustomException;
 import com.QuickGo.backend.models.Role;
 import com.QuickGo.backend.models.User;
 import com.QuickGo.backend.models.enums.ERole;
 import com.QuickGo.backend.repository.RoleRepository;
 import com.QuickGo.backend.repository.UserRepository;
 import com.QuickGo.backend.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -30,6 +35,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     PasswordEncoder encoder;
+
+    @Autowired
+    IdGenerationUtil idGenerationUtil;
 
     @Override
     public List<GeoLocationDriverDTO> findByUserCodes(List<DriverCoordinateDto> request) {
@@ -85,6 +93,21 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUserCode(userCode)
                 .map(this::toUserDto)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    @Override
+    public ResponseMessage otpSend(UserDTO userData) throws Exception {
+        if (!userData.getEmail().isEmpty()){
+            Optional<User> byEmail = userRepository.findByEmail(userData.getEmail());
+            if(byEmail.isPresent()){
+               UserDTO userDTO = toUserDto(byEmail.get());
+                userDTO.setOtp(idGenerationUtil.otpGenerator());
+                //send the email
+                return new ResponseMessage(HttpStatus.OK.value(), "success",userDTO);
+            }else {
+                throw new CustomException("Can't find a user");
+            }
+        }throw new CustomException("email is empty");
     }
 
 
