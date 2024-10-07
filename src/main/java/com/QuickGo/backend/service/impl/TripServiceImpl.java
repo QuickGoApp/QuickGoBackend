@@ -168,6 +168,7 @@ public class TripServiceImpl implements TripService {
         trip.setUpdateDateTime(new Date());
         tripRepository.save(trip);
 
+        mailService.sendEmailAsync(trip.getPassenger().getEmail(), "Trip Cancellation Notice", generateTripCancelEmailBody(trip));
         return new ResponseMessage(HttpStatus.OK.value(), "Trip request cancelled successfully.");
 
     }
@@ -188,7 +189,7 @@ public class TripServiceImpl implements TripService {
         trip.setPassengerComment("Trip request cancelled by driver");
         trip.setUpdateDateTime(new Date());
         tripRepository.save(trip);
-
+        mailService.sendEmailAsync(trip.getPassenger().getEmail(), "Trip Cancellation Notice", generateTripCancelEmailBody(trip));
         return new ResponseMessage(HttpStatus.OK.value(), "Trip request cancelled successfully.");
     }
 
@@ -236,27 +237,27 @@ public class TripServiceImpl implements TripService {
     @Override
     public ResponseMessage endTripRequest(TripRequestDetailDTO requestDetailDTO) {
 
-            if (requestDetailDTO.getPassengerCode() == null || requestDetailDTO.getPassengerCode().isEmpty()) {
-                return new ResponseMessage(HttpStatus.BAD_REQUEST.value(), "Passenger code cannot be empty.");
-            }
+        if (requestDetailDTO.getPassengerCode() == null || requestDetailDTO.getPassengerCode().isEmpty()) {
+            return new ResponseMessage(HttpStatus.BAD_REQUEST.value(), "Passenger code cannot be empty.");
+        }
 
-            List<Trip> passengerRequests = tripRepository.findTripByPassengerCodeAndDriveCodeAndStatus(requestDetailDTO.getPassengerCode(), requestDetailDTO.getDriveCode(), "ACCEPTED");
-            if (passengerRequests.isEmpty()) {
-                return new ResponseMessage(HttpStatus.NOT_FOUND.value(), "You have not accepted any trip request.");
-            }
+        List<Trip> passengerRequests = tripRepository.findTripByPassengerCodeAndDriveCodeAndStatus(requestDetailDTO.getPassengerCode(), requestDetailDTO.getDriveCode(), "ACCEPTED");
+        if (passengerRequests.isEmpty()) {
+            return new ResponseMessage(HttpStatus.NOT_FOUND.value(), "You have not accepted any trip request.");
+        }
 
-            Trip trip = passengerRequests.get(0);
+        Trip trip = passengerRequests.get(0);
 
-            if (!"ACCEPTED".equals(trip.getStatus())) {
-                return new ResponseMessage(HttpStatus.BAD_REQUEST.value(), "You have not accepted any trip request.");
-            }
+        if (!"ACCEPTED".equals(trip.getStatus())) {
+            return new ResponseMessage(HttpStatus.BAD_REQUEST.value(), "You have not accepted any trip request.");
+        }
 
-            trip.setStatus("COMPLETED");
-            trip.setPassengerComment("Trip completed successfully");
-            trip.setUpdateDateTime(new Date());
-            tripRepository.save(trip);
+        trip.setStatus("COMPLETED");
+        trip.setPassengerComment("Trip completed successfully");
+        trip.setUpdateDateTime(new Date());
+        tripRepository.save(trip);
 
-            return new ResponseMessage(HttpStatus.OK.value(), "Trip completed successfully.");
+        return new ResponseMessage(HttpStatus.OK.value(), "Trip completed successfully.");
     }
 
     public String generateEmailBody(Trip trip) {
@@ -349,6 +350,97 @@ public class TripServiceImpl implements TripService {
                 trip.getContactNumber()
         );
 
+    }
+
+    private String generateTripCancelEmailBody(Trip trip) {
+        String emailTemplate = """
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Trip Request Cancelled</title>
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            background-color: #f4f4f4;
+                            margin: 0;
+                            padding: 0;
+                        }
+                        .container {
+                            background-color: #ffffff;
+                            width: 80%%;
+                            max-width: 600px;
+                            margin: 20px auto;
+                            padding: 20px;
+                            border-radius: 10px;
+                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                        }
+                        .header {
+                            background-color: #ff4b4b;
+                            color: #ffffff;
+                            text-align: center;
+                            padding: 10px;
+                            border-top-left-radius: 10px;
+                            border-top-right-radius: 10px;
+                        }
+                        .header h1 {
+                            margin: 0;
+                            font-size: 24px;
+                        }
+                        .content {
+                            margin: 20px 0;
+                            line-height: 1.6;
+                        }
+                        .content p {
+                            margin: 10px 0;
+                        }
+                        .footer {
+                            text-align: center;
+                            color: #666666;
+                            font-size: 14px;
+                            padding-top: 10px;
+                            border-top: 1px solid #dddddd;
+                        }
+                        .footer p {
+                            margin: 5px 0;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <div class="header">
+                            <h1>Trip Request Cancelled</h1>
+                        </div>
+                        <div class="content">
+                            <p>Dear %s,</p>
+                            <p>Your trip request has been cancelled.</p>
+                            <p>
+                                <strong>Driver:</strong> %s<br>
+                                <strong>Vehicle Number:</strong> %s<br>
+                                <strong>Vehicle Type:</strong> %s<br>
+                                <strong>Vehicle Color:</strong> %s<br>
+                            </p>
+                            <p>If you have any questions, feel free to contact our support team.</p>
+                        </div>
+                        <div class="footer">
+                            <p>&copy; 2024 Your Company Name. All rights reserved.</p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+                """;
+
+        User driver = trip.getDriver();
+        User passenger = trip.getPassenger();
+
+        return emailTemplate.formatted(
+                passenger.getName(),
+                driver.getName(),
+                driver.getVehicle().getVehicleNumber(),
+                driver.getVehicle().getType(),
+                driver.getVehicle().getColor()
+        );
     }
 
 

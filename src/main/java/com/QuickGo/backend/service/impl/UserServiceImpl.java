@@ -14,6 +14,7 @@ import com.QuickGo.backend.models.User;
 import com.QuickGo.backend.models.enums.ERole;
 import com.QuickGo.backend.repository.RoleRepository;
 import com.QuickGo.backend.repository.UserRepository;
+import com.QuickGo.backend.service.MailService;
 import com.QuickGo.backend.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     IdGenerationUtil idGenerationUtil;
+    @Autowired
+    private MailService mailService;
 
     @Override
     public List<GeoLocationDriverDTO> findByUserCodes(List<DriverCoordinateDto> request) {
@@ -79,7 +82,7 @@ public class UserServiceImpl implements UserService {
                     x.setEmail(userData.getEmail());
                     x.setMobileNum(userData.getMobile_num());
                     x.setUsername(userData.getUsername());
-                    if(!userData.getPassword().isEmpty()){
+                    if (!userData.getPassword().isEmpty()) {
                         x.setPassword(encoder.encode(userData.getPassword()));
                     }
                     userRepository.save(x);
@@ -97,17 +100,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseMessage otpSend(UserDTO userData) throws Exception {
-        if (!userData.getEmail().isEmpty()){
+        if (!userData.getEmail().isEmpty()) {
             Optional<User> byEmail = userRepository.findByEmail(userData.getEmail());
-            if(byEmail.isPresent()){
-               UserDTO userDTO = toUserDto(byEmail.get());
-                userDTO.setOtp(idGenerationUtil.otpGenerator());
-                //send the email
-                return new ResponseMessage(HttpStatus.OK.value(), "success",userDTO);
-            }else {
+            if (byEmail.isPresent()) {
+                UserDTO userDTO = toUserDto(byEmail.get());
+                String otp = idGenerationUtil.otpGenerator();
+                userDTO.setOtp(otp);
+                mailService.sendEmailAsync(byEmail.get().getEmail(), "Password Reset Request – Your One-Time Password (OTP) Inside", generateForgotPasswordEmailBody(otp));
+                return new ResponseMessage(HttpStatus.OK.value(), "success", userDTO);
+            } else {
                 throw new CustomException("Can't find a user");
             }
-        }throw new CustomException("email is empty");
+        }
+        throw new CustomException("email is empty");
     }
 
 
@@ -172,6 +177,91 @@ public class UserServiceImpl implements UserService {
                 .favoriteID(1)
                 .build();
     }
+
+    public String generateForgotPasswordEmailBody(String otp) {
+        String emailTemplate = """
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Forgot Password Request</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #f4f4f4;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    .container {
+                        background-color: #ffffff;
+                        width: 80%%;
+                        max-width: 600px;
+                        margin: 20px auto;
+                        padding: 20px;
+                        border-radius: 10px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    }
+                    .header {
+                        background-color: #007bff;
+                        color: #ffffff;
+                        text-align: center;
+                        padding: 10px;
+                        border-top-left-radius: 10px;
+                        border-top-right-radius: 10px;
+                    }
+                    .header h1 {
+                        margin: 0;
+                        font-size: 24px;
+                    }
+                    .content {
+                        margin: 20px 0;
+                        line-height: 1.6;
+                    }
+                    .content p {
+                        margin: 10px 0;
+                    }
+                    .otp {
+                        font-weight: bold;
+                        font-size: 18px;
+                        color: #007bff;
+                    }
+                    .footer {
+                        text-align: center;
+                        color: #666666;
+                        font-size: 14px;
+                        padding-top: 10px;
+                        border-top: 1px solid #dddddd;
+                    }
+                    .footer p {
+                        margin: 5px 0;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>Password Reset Request</h1>
+                    </div>
+                    <div class="content">
+                        <p>Dear User,</p>
+                        <p>You have requested a One-Time Password (OTP) to reset your password.</p>
+                        <p>Your OTP is:</p>
+                        <p class="otp">%s</p>
+                        <p>Please use this OTP to reset your password. For security reasons, the OTP will expire in 10 minutes.</p>
+                        <p>If you did not request a password reset, please contact our support team immediately.</p>
+                    </div>
+                    <div class="footer">
+                        <p>&copy; 2024 Your Company Name. All rights reserved.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+            """;
+
+        return emailTemplate.formatted(otp);
+    }
+
 
 
 }
