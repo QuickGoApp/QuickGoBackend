@@ -1,10 +1,12 @@
 package com.QuickGo.backend.service.impl;
 
 import com.QuickGo.backend.service.MailService;
+import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -28,12 +30,13 @@ public class MailServiceImpl implements MailService {
     @Override
     public void sendEmail(String recipient, String subject, String body) {
         try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(recipient);
-            message.setSubject(subject);
-            message.setText(body);
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+            helper.setTo(recipient);
+            helper.setSubject(subject);
+            helper.setText(body, true); // Set 'true' to indicate HTML content
 
-            mailSender.send(message);
+            mailSender.send(mimeMessage);
             log.info("Email sent successfully to: {}", recipient);
         } catch (Exception e) {
             log.error("Error sending email: {}", e.getMessage());
